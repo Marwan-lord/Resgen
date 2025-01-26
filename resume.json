@@ -1,0 +1,32 @@
+{
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "phone": "+1 555 123 4567",
+    "address": "New York, NY",
+    "summary": "Experienced software engineer with 5+ years of experience in building scalable systems. Specializing in Rust and distributed systems.",
+    "work_experience": [
+        {
+            "title": "Senior Software Engineer",
+            "company": "Tech Corp",
+            "start_date": "2020",
+            "end_date": "Present",
+            "description": "Led development of high-performance distributed systems. Managed team of 5 engineers. Implemented Rust-based microservices architecture."
+        },
+        {
+            "title": "Software Engineer",
+            "company": "Startup Inc",
+            "start_date": "2018",
+            "end_date": "2020",
+            "description": "Developed core backend services. Improved system performance by 40%. Implemented CI/CD pipelines."
+        }
+    ],
+    "education": [
+        {
+            "degree": "B.Sc. Computer Science",
+            "institution": "State University",
+            "start_date": "2014",
+            "end_date": "2018"
+        }
+    ],
+    "skills": ["Rust", "Python", "Distributed Systems", "AWS", "Docker", "Kubernetes"]
+}
