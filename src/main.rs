@@ -106,7 +106,7 @@ fn main() {
     let font = fonts::from_files("./fonts", "LiberationSans", None).expect("Failed to load font");
     let mut doc = Document::new(font);
 
-    doc.set_font_size(15);
+    doc.set_font_size(11);
     doc.set_title("Demo document");
 
     let mut deco = SimplePageDecorator::new();
