@@ -1,104 +1,36 @@
+pub mod templates;
 pub mod user;
 use std::fs;
 
 use crate::user::Person;
 
 use clap::{command, Arg};
-use genpdf::{elements, fonts, style, Alignment, Document, Element, SimplePageDecorator};
-
-fn gen_default_temp(doc: &mut Document, p: &Person) {
-    let header_layout = elements::LinearLayout::vertical()
-        .element(
-            elements::Paragraph::default()
-                .styled_string(&p.name, style::Effect::Bold)
-                .aligned(Alignment::Center),
-        )
-        .element(
-            elements::Paragraph::default()
-                .styled_string(&p.address, style::Effect::Italic)
-                .aligned(Alignment::Center),
-        )
-        .element(elements::Paragraph::new(p.contact.to_string()).aligned(Alignment::Center));
-
-    doc.push(header_layout);
-    doc.push(elements::Paragraph::new(""));
-
-    doc.push(elements::Paragraph::new("Summary").styled(style::Effect::Bold));
-    doc.push(elements::Paragraph::new(&p.summary));
-    doc.push(elements::Paragraph::new(""));
-
-    doc.push(elements::Paragraph::new("Education").styled(style::Effect::Bold));
-    for e in &p.education {
-        doc.push(
-            elements::LinearLayout::vertical()
-                .element(elements::Paragraph::new(&e.degree))
-                .element(elements::Paragraph::new(&e.institution))
-                .element(
-                    elements::Paragraph::new(format!("-from {} to {}", &e.start_date, &e.end_date))
-                        .aligned(Alignment::Right),
-                ),
-        );
-    }
-    doc.push(elements::Paragraph::new(""));
-
-    if let Some(exp) = &p.work_experience {
-        doc.push(elements::Paragraph::new("Work Experience").styled(style::Effect::Bold));
-        for e in exp {
-            doc.push(
-                elements::UnorderedList::new().element(
-                    elements::LinearLayout::vertical()
-                        .element(elements::Paragraph::new(&e.title).styled(style::Effect::Bold))
-                        .element(
-                            elements::Paragraph::new(format!("At {}", &e.company))
-                                .styled(style::Effect::Italic),
-                        )
-                        .element(elements::Paragraph::new(&e.description))
-                        .element(
-                            elements::Paragraph::new(format!(
-                                "-from {} to {}",
-                                &e.start_date, &e.end_date
-                            ))
-                            .aligned(Alignment::Right),
-                        ),
-                ),
-            );
-            doc.push(elements::Paragraph::new(""));
-        }
-    }
-
-    if let Some(projs) = &p.projects {
-        doc.push(elements::Paragraph::new("Projects").styled(style::Effect::Bold));
-        for proj in projs {
-            let mut used_tech = String::new();
-            for used in &proj.technologies {
-                used_tech.push_str(used.as_str());
-                used_tech.push_str(", ");
-            }
-            doc.push(
-                elements::UnorderedList::new().element(
-                    elements::LinearLayout::vertical()
-                        .element(elements::Paragraph::new(&proj.name).styled(style::Effect::Bold))
-                        .element(elements::Paragraph::new(&proj.url).styled(style::Effect::Italic))
-                        .element(elements::Paragraph::new(&proj.description))
-                        .element(elements::Paragraph::new(format!("Used: {}", used_tech))),
-                ),
-            )
-        }
-    }
-    doc.push(elements::Paragraph::new("Skills").styled(style::Effect::Bold));
-
-    let mut string_of_skills = String::new();
-    for s in &p.skills {
-        string_of_skills.push_str(s.as_str());
-        string_of_skills.push_str(", ");
-    }
-
-    doc.push(elements::Paragraph::new(string_of_skills));
-}
+use genpdf::{fonts, Document, SimplePageDecorator};
+use templates::gen_default_temp;
 
 fn main() {
     let parsed = command!()
-        .arg(Arg::new("filename").short('f').required(true).long("file"))
+        .arg(
+            Arg::new("filename")
+            .short('f')
+            .required(true)
+            .long("file")
+            .long_help("choose the json file to generate your resume")
+        )
+        .arg(
+            Arg::new("template")
+            .short('t').
+            default_value("default")
+            .long("temp")
+            .long_help("options: minimal, clean")
+        )
+        .arg(
+            Arg::new("output")
+            .short('o')
+            .long("out")
+            .long_help("choose the name of the output file")
+            .default_value("cv.pdf")
+        )
         .about("Resgen is a CLI for generating your resume focused on privacy and simplicty as no data is stored")
         .get_matches();
 
@@ -117,9 +49,17 @@ fn main() {
         deco.set_margins(10);
         doc.set_page_decorator(deco);
 
-        gen_default_temp(&mut doc, &p);
+        if let Some(tmp) = parsed.get_one::<String>("template") {
+            match tmp.as_str() {
+                "minimal" => todo!(),
+                "clean" => todo!(),
+                _ => gen_default_temp(&mut doc, &p),
+            }
+        }
 
-        doc.render_to_file("demo.pdf")
-            .expect("Error Rendering file to output");
+        if let Some(o) = parsed.get_one::<String>("output") {
+            doc.render_to_file(o)
+                .expect("Error Rendering file to output");
+        }
     }
 }
