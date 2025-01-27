@@ -16,4 +16,4 @@ Resgen is a lightweight, command-line tool that converts structured JSON data in
 Requires [Rust toolchain](https://www.rust-lang.org/tools/install) installed.
 
 ```bash
-cargo install --git https://github.com/yourusername/resgen
+cargo install --git https://github.com/Marwan-lord/Resgen
