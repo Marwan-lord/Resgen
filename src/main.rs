@@ -45,7 +45,7 @@ fn main() {
             .long_help("choose the name of the output file")
             .default_value("cv.pdf")
         )
-        .about("Resgen is a CLI for generating your resume focused on privacy and simplicty as no data is stored")
+        .about("Resgen is a lightning-fast static resume generator built with privacy and ATS optimization in mind")
         .get_matches();
 
     if let Some(fp) = parsed.get_one::<String>("filename") {
