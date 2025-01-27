@@ -1,86 +1,13 @@
-use std::fmt::{self, Display, Formatter};
+pub mod user;
+use crate::user::Person;
 
 use genpdf::{elements, fonts, style, Alignment, Document, Element, SimplePageDecorator};
-use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
-struct Person {
-    name: String,
-    address: String,
-    email: String,
-    phone: String,
-    summary: String,
-    work_experience: Option<Vec<Work>>,
-    education: Vec<Edu>,
-    skills: Vec<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Work {
-    title: String,
-    company: String,
-    start_date: String,
-    end_date: String,
-    description: String,
-}
-
-impl Display for Work {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}, {}             from {} to  {} {}",
-            self.title, self.company, self.start_date, self.end_date, self.description
-        )
-    }
-}
-#[derive(Serialize, Deserialize, Debug)]
-struct Edu {
-    degree: String,
-    institution: String,
-    start_date: String,
-    end_date: String,
-}
-
-impl Display for Person {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let strings = self
-            .education
-            .iter()
-            .map(|s| format!("{}", s))
-            .collect::<Vec<String>>()
-            .join(",");
-        write!(f, "{}", strings)
-    }
-}
-
-impl Display for Edu {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}, {}             from {} to  {}",
-            self.institution, self.degree, self.start_date, self.end_date
-        )
-    }
-}
-
-fn main() {
-    let data = include_str!("../resume.json");
-    let p: Person = serde_json::from_str(data).expect("Unable to read json from file");
-
-    let font = fonts::from_files("./fonts", "LiberationSans", None).expect("Failed to load font");
-    let mut doc = Document::new(font);
-
-    doc.set_font_size(15);
-    doc.set_title("Demo document");
-
-    let mut deco = SimplePageDecorator::new();
-    deco.set_margins(10);
-    doc.set_page_decorator(deco);
-
+fn gen_default_temp(doc: &mut Document, p: &Person) {
     let header_layout = elements::LinearLayout::vertical()
         .element(
             elements::Paragraph::default()
-                .styled_string(p.name, style::Effect::Bold)
+                .styled_string(&p.name, style::Effect::Bold)
                 .aligned(Alignment::Center),
         )
         .element(
@@ -93,12 +20,20 @@ fn main() {
     doc.push(elements::Paragraph::new(""));
 
     doc.push(elements::Paragraph::new("Summary").styled(style::Effect::Bold));
-    doc.push(elements::Paragraph::new(p.summary));
+    doc.push(elements::Paragraph::new(&p.summary));
     doc.push(elements::Paragraph::new(""));
 
     doc.push(elements::Paragraph::new("Education").styled(style::Effect::Bold));
     for e in &p.education {
-        doc.push(elements::Paragraph::new(e.to_string()));
+        doc.push(
+            elements::LinearLayout::vertical()
+                .element(elements::Paragraph::new(&e.degree))
+                .element(elements::Paragraph::new(&e.institution))
+                .element(
+                    elements::Paragraph::new(format!("-from {} to {}", &e.start_date, &e.end_date))
+                        .aligned(Alignment::Right),
+                ),
+        );
     }
     doc.push(elements::Paragraph::new(""));
 
@@ -116,7 +51,7 @@ fn main() {
                         .element(elements::Paragraph::new(&e.description))
                         .element(
                             elements::Paragraph::new(format!(
-                                "from {} to {}",
+                                "-from {} to {}",
                                 &e.start_date, &e.end_date
                             ))
                             .aligned(Alignment::Right),
@@ -124,6 +59,33 @@ fn main() {
                 ),
             );
             doc.push(elements::Paragraph::new(""));
+        }
+    }
+
+    if let Some(projs) = &p.projects {
+        doc.push(elements::Paragraph::new("Projects").styled(style::Effect::Bold));
+        for proj in projs {
+            let mut used_tech = String::new();
+            for used in &proj.technologies {
+                used_tech.push_str(used.as_str());
+                used_tech.push_str(", ");
+            }
+            doc.push(
+                elements::UnorderedList::new().element(
+                    elements::LinearLayout::vertical()
+                        .element(elements::Paragraph::new(&proj.name).styled(style::Effect::Bold))
+                        .element(elements::Paragraph::new(&proj.url).styled(style::Effect::Italic))
+                        .element(elements::Paragraph::new(&proj.description))
+                        .element(elements::Paragraph::new(format!("Used: {}", used_tech)))
+                        .element(
+                            elements::Paragraph::new(format!(
+                                "-from {} to {}",
+                                &proj.start_date, &proj.end_date
+                            ))
+                            .aligned(Alignment::Right),
+                        ),
+                ),
+            );
         }
     }
     doc.push(elements::Paragraph::new("Skills").styled(style::Effect::Bold));
@@ -135,6 +97,23 @@ fn main() {
     }
 
     doc.push(elements::Paragraph::new(string_of_skills));
+}
+
+fn main() {
+    let data = include_str!("../resume.json");
+    let p: Person = serde_json::from_str(data).expect("Unable to read json from file");
+
+    let font = fonts::from_files("./fonts", "LiberationSans", None).expect("Failed to load font");
+    let mut doc = Document::new(font);
+
+    doc.set_font_size(15);
+    doc.set_title("Demo document");
+
+    let mut deco = SimplePageDecorator::new();
+    deco.set_margins(10);
+    doc.set_page_decorator(deco);
+
+    gen_default_temp(&mut doc, &p);
 
     doc.render_to_file("demo.pdf")
         .expect("Error Rendering file to output");

@@ -28,5 +28,23 @@
             "end_date": "2018"
         }
     ],
-    "skills": ["Rust", "Python", "Distributed Systems", "AWS", "Docker", "Kubernetes"]
+    "skills": ["Rust", "Python", "Distributed Systems", "AWS", "Docker", "Kubernetes"],
+    "projects": [
+        {
+            "name": "Distributed Task Scheduler",
+            "description": "Built a Rust-based distributed task scheduling system using RAFT consensus algorithm",
+            "technologies": ["Rust", "Tokio", "PostgreSQL", "gRPC"],
+            "start_date": "2023",
+            "end_date": "2024",
+            "url": "https://github.com/example/task-scheduler"
+        },
+        {
+            "name": "Resume Generator CLI",
+            "description": "Open-source PDF resume generator with JSON input and customizable templates",
+            "technologies": ["Rust", "PDF Generation", "CLI"],
+            "start_date": "2024",
+            "end_date": "Present",
+            "url": "https://github.com/example/resume-generator"
+        }
+    ]
 }
