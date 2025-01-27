@@ -1,0 +1,61 @@
+{
+    "name": "James Carter",
+    "address": "123 Tech Valley Drive",
+    "contact": {
+      "email": "james.carter@email.com",
+      "phone": "(415) 555-0198",
+      "linkedin": "linkedin.com/in/james-it-tech",
+      "github": "github.com/jcarter-tech"
+    },
+  "summary": "Detail-oriented IT Technician with 5+ years of experience in user support and system maintenance. Proven expertise in hardware/software troubleshooting, system upgrades, and preventive maintenance. Skilled in building cross-departmental relationships with 98% user satisfaction rates. CompTIA Network+ and Cisco CCNA certified professional with strong problem-solving abilities.",
+  "work_experience": [
+    {
+      "title": "Senior IT Technician",
+      "company": "Bay Area Tech Solutions",
+      "start_date": "2020-03",
+      "end_date": "present",
+      "description": "Primary support contact for 500+ users, resolving 90% of tier-1 issues within SLA Implemented standardized troubleshooting protocols reducing ticket resolution time by 35% Performed weekly backups maintaining 99.9% data integrity across 250TB storage Installed/configured endpoint security software across 500+ devices, reducing malware incidents by 75% Documented technical processes adopted company-wide, improving onboarding efficiency by 40%"
+    },
+    {
+      "title": "IT Support Specialist",
+      "company": "Golden Gate University",
+      "start_date": "2017-06",
+      "end_date": "2020-02",
+      "description": "Maintained 100% uptime for campus-wide network supporting 10,000+ daily users Deployed MDM solution managing 2,500+ devices with zero data breach incidents Conducted monthly electrical safety audits achieving 100% compliance rating Automated software deployment processes reducing setup time by 70% Trained 150+ staff members on new systems through individualized coaching"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Science in Information Technology",
+      "institution": "California State University",
+      "start_date": "2014",
+      "end_date": "2017"
+    }
+  ],
+  "projects": [
+    {
+      "name": "User Support Knowledge Base",
+      "description": "Developed internal documentation system for common IT issues",
+      "technologies": ["Confluence", "SQL", "PowerShell"],
+      "url": "github.com/JohnCarter/uskb.git"
+    }
+  ],
+  "skills": [
+      "Hardware Installation/Configuration",
+      "Software Troubleshooting (Windows/Linux/macOS)",
+      "Antivirus Deployment & Management",
+      "Backup Operations & Disaster Recovery",
+      "CompTIA A+",
+      "Cisco Certified Network Associate (CCNA)",
+      "ITIL Foundation Certification",
+      "Cross-departmental Communication",
+      "User Training & Support",
+      "Technical Documentation",
+      "Problem Resolution",
+      "Active Directory",
+      "SCCM",
+      "Nagios",
+      "Veeam Backup",
+      "SQL Database Management"
+  ]
+}
