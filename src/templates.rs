@@ -46,7 +46,7 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
         doc.push(elements::Paragraph::new("Work History").styled(style::Effect::Bold));
         for e in exp {
             doc.push(
-                elements::UnorderedList::with_bullet("●").element(
+                elements::UnorderedList::with_bullet("-").element(
                     elements::LinearLayout::vertical()
                         .element(elements::Paragraph::new(&e.title).styled(style::Effect::Bold))
                         .element(
@@ -76,7 +76,7 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
                 used_tech.push(' ');
             }
             doc.push(
-                elements::UnorderedList::with_bullet("●").element(
+                elements::UnorderedList::with_bullet("-").element(
                     elements::LinearLayout::vertical()
                         .element(elements::Paragraph::new(&proj.name).styled(style::Effect::Bold))
                         .element(elements::Paragraph::new(&proj.url).styled(style::Effect::Italic))

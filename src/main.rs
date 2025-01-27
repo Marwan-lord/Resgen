@@ -11,6 +11,17 @@ use genpdf::{
 };
 use templates::{gen_clean_temp, gen_default_temp};
 
+const FONT_DIRS: &[&str] = &[
+    "/usr/share/fonts/liberation",
+    "/usr/share/fonts/truetype/liberation",
+    ".fonts/",
+    "./fonts/",
+    "/home/$USER/.fonts",
+    "/home/$USER/.local/share/fonts/",
+];
+
+const DEFAULT_FONT_NAME: &'static str = "LiberationSans";
+
 fn main() {
     let parsed = command!()
         .arg(
@@ -41,13 +52,19 @@ fn main() {
         let data = fs::read_to_string(fp).expect("File not found");
         let p: Person = serde_json::from_str(data.as_str()).expect("Unable to read json from file");
 
+        let font_dir = FONT_DIRS
+            .iter()
+            .filter(|path| std::path::Path::new(path).exists())
+            .next()
+            .expect("Could not find font directory");
+
         let font =
-            fonts::from_files("./fonts", "LiberationSans", None).expect("Failed to load font");
+            fonts::from_files(font_dir, DEFAULT_FONT_NAME, None).expect("Failed to load font");
 
         let mut doc = Document::new(font);
 
         doc.set_font_size(12);
-        doc.set_title("Demo document");
+        doc.set_title("Resume Document");
 
         let mut deco = SimplePageDecorator::new();
         deco.set_margins(10);
@@ -55,7 +72,6 @@ fn main() {
 
         if let Some(tmp) = parsed.get_one::<String>("template") {
             match tmp.as_str() {
-                "minimal" => todo!(),
                 "clean" => gen_clean_temp(&mut doc, &p),
                 _ => gen_default_temp(&mut doc, &p),
             }
