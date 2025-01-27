@@ -8,6 +8,8 @@ Resgen is a lightweight, command-line tool that converts structured JSON data in
 - **CLI Simplicity**: Generate PDFs with a single terminal command
 - **Zero Runtime Dependencies**: Compiled binary works out-of-the-box
 - **Cross-Platform**: Supports Windows, Linux, and macOS
+- **Cross-Platform**: Runs seamlessly on Windows, macOS, and Linux.
+- **Privacy-First**: Your data stays local—no cloud dependencies or tracking.
 
 ## Installation
 

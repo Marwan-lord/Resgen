@@ -1,50 +1,66 @@
 {
-    "name": "Jane Doe",
-    "email": "jane@example.com",
-    "phone": "+1 555 123 4567",
-    "address": "New York, NY",
-    "summary": "Experienced software engineer with 5+ years of experience in building scalable systems. Specializing in Rust and distributed systems.",
-    "work_experience": [
-        {
-            "title": "Senior Software Engineer",
-            "company": "Tech Corp",
-            "start_date": "2020",
-            "end_date": "Present",
-            "description": "Led development of high-performance distributed systems. Managed team of 5 engineers. Implemented Rust-based microservices architecture."
-        },
-        {
-            "title": "Software Engineer",
-            "company": "Startup Inc",
-            "start_date": "2018",
-            "end_date": "2020",
-            "description": "Developed core backend services. Improved system performance by 40%. Implemented CI/CD pipelines."
-        }
-    ],
-    "education": [
-        {
-            "degree": "B.Sc. Computer Science",
-            "institution": "State University",
-            "start_date": "2014",
-            "end_date": "2018"
-        }
-    ],
-    "skills": ["Rust", "Python", "Distributed Systems", "AWS", "Docker", "Kubernetes"],
-    "projects": [
-        {
-            "name": "Distributed Task Scheduler",
-            "description": "Built a Rust-based distributed task scheduling system using RAFT consensus algorithm",
-            "technologies": ["Rust", "Tokio", "PostgreSQL", "gRPC"],
-            "start_date": "2023",
-            "end_date": "2024",
-            "url": "https://github.com/example/task-scheduler"
-        },
-        {
-            "name": "Resume Generator CLI",
-            "description": "Open-source PDF resume generator with JSON input and customizable templates",
-            "technologies": ["Rust", "PDF Generation", "CLI"],
-            "start_date": "2024",
-            "end_date": "Present",
-            "url": "https://github.com/example/resume-generator"
-        }
-    ]
+  "name": "John Doe",
+  "address": "123 Street",
+  "contact": {
+    "email": "johndoe@example.com",
+    "phone": "+00 123 456 7890",
+    "linkedin": "https://linkedin.com/in/johndoe",
+    "github": "https://github.com/johndoe"
+  },
+  "summary": "Experienced software developer with expertise in systems programming, problem-solving, and building scalable, efficient applications. Passionate about learning new technologies and contributing to impactful projects.",
+  "work_experience": [
+    {
+      "title": "Software Engineer",
+      "company": "Tech Solutions Ltd.",
+      "start_date": "2021-01",
+      "end_date": "Present",
+      "description": "Developed system-level software, optimizing application performance by 20%. Implemented efficient memory management solutions for embedded systems. Collaborated with teams to deliver high-quality software on time."
+    },
+    {
+      "title": "Junior Developer",
+      "company": "Innovation Corp.",
+      "start_date": "2019-06",
+      "end_date": "2020-12",
+      "description": "Assisted in building virtual machines for running custom bytecodeOptimized drivers for embedded hardware Contributed to maintaining and debugging legacy code."
+    }
+  ],
+  "projects": [
+    {
+      "name": "Custom Emulator",
+      "description": "Built a functional emulator for an 8-bit system to support retro games. Implemented debugging tools for better usability.",
+      "technologies": ["C", "SDL2"],
+      "url": "github.com/username/custom_emulator"
+    },
+    {
+      "name": "Interpreter for Scripting Language",
+      "description": "Designed and implemented an interpreter for a simple scripting language with error handling and garbage collection.",
+      "technologies": ["Rust"],
+      "url": "github.com/username/Interpreter"
+    },
+    {
+      "name": "Virtual Machine Project",
+      "description": "Created a virtual machine for executing bytecode with a stack-based architecture and efficient instruction decoding.",
+      "technologies": ["C", "Assembly"],
+      "url": "github.com/username/virtual-machine"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Science in Computer Science",
+      "institution": "Example University",
+      "start_date": "2016-09",
+      "end_date": "2020-06"
+    }
+  ],
+  "skills": [
+    "Rust",
+    "C",
+    "Assembly",
+    "Linux Systems Programming",
+    "Embedded Systems Development",
+    "Algorithms and Data Structures",
+    "Version Control (Git)",
+    "Debugging and Profiling Tools"
+  ]
 }
+

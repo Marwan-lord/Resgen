@@ -1,6 +1,9 @@
 pub mod user;
+use std::fs;
+
 use crate::user::Person;
 
+use clap::{command, Arg};
 use genpdf::{elements, fonts, style, Alignment, Document, Element, SimplePageDecorator};
 
 fn gen_default_temp(doc: &mut Document, p: &Person) {
@@ -94,21 +97,29 @@ fn gen_default_temp(doc: &mut Document, p: &Person) {
 }
 
 fn main() {
-    let data = include_str!("../resume2.json");
-    let p: Person = serde_json::from_str(data).expect("Unable to read json from file");
+    let parsed = command!()
+        .arg(Arg::new("filename").short('f').required(true).long("file"))
+        .about("Resgen is a CLI for generating your resume focused on privacy and simplicty as no data is stored")
+        .get_matches();
 
-    let font = fonts::from_files("./fonts", "LiberationSans", None).expect("Failed to load font");
-    let mut doc = Document::new(font);
+    if let Some(fp) = parsed.get_one::<String>("filename") {
+        let data = fs::read_to_string(fp).expect("File not found");
+        let p: Person = serde_json::from_str(data.as_str()).expect("Unable to read json from file");
 
-    doc.set_font_size(12);
-    doc.set_title("Demo document");
+        let font =
+            fonts::from_files("./fonts", "LiberationSans", None).expect("Failed to load font");
+        let mut doc = Document::new(font);
 
-    let mut deco = SimplePageDecorator::new();
-    deco.set_margins(10);
-    doc.set_page_decorator(deco);
+        doc.set_font_size(12);
+        doc.set_title("Demo document");
 
-    gen_default_temp(&mut doc, &p);
+        let mut deco = SimplePageDecorator::new();
+        deco.set_margins(10);
+        doc.set_page_decorator(deco);
 
-    doc.render_to_file("demo.pdf")
-        .expect("Error Rendering file to output");
+        gen_default_temp(&mut doc, &p);
+
+        doc.render_to_file("demo.pdf")
+            .expect("Error Rendering file to output");
+    }
 }
