@@ -1,0 +1,66 @@
+{
+  "name": "John Doe",
+  "address": "123 Street",
+  "contact": {
+    "email": "johndoe@example.com",
+    "phone": "+00 123 456 7890",
+    "linkedin": "https://linkedin.com/in/johndoe",
+    "github": "https://github.com/johndoe"
+  },
+  "summary": "Experienced software developer with expertise in systems programming, problem-solving, and building scalable, efficient applications. Passionate about learning new technologies and contributing to impactful projects.",
+  "work_experience": [
+    {
+      "title": "Software Engineer",
+      "company": "Tech Solutions Ltd.",
+      "start_date": "2021-01",
+      "end_date": "Present",
+      "description": "Developed system-level software, optimizing application performance by 20%. Implemented efficient memory management solutions for embedded systems. Collaborated with teams to deliver high-quality software on time."
+    },
+    {
+      "title": "Junior Developer",
+      "company": "Innovation Corp.",
+      "start_date": "2019-06",
+      "end_date": "2020-12",
+      "description": "Assisted in building virtual machines for running custom bytecodeOptimized drivers for embedded hardware Contributed to maintaining and debugging legacy code."
+    }
+  ],
+  "projects": [
+    {
+      "name": "Custom Emulator",
+      "description": "Built a functional emulator for an 8-bit system to support retro games. Implemented debugging tools for better usability.",
+      "technologies": ["C", "SDL2"],
+      "url": "github.com/username/custom_emulator"
+    },
+    {
+      "name": "Interpreter for Scripting Language",
+      "description": "Designed and implemented an interpreter for a simple scripting language with error handling and garbage collection.",
+      "technologies": ["Rust"],
+      "url": "github.com/username/Interpreter"
+    },
+    {
+      "name": "Virtual Machine Project",
+      "description": "Created a virtual machine for executing bytecode with a stack-based architecture and efficient instruction decoding.",
+      "technologies": ["C", "Assembly"],
+      "url": "github.com/username/virtual-machine"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Science in Computer Science",
+      "institution": "Example University",
+      "start_date": "2016-09",
+      "end_date": "2020-06"
+    }
+  ],
+  "skills": [
+    "Rust",
+    "C",
+    "Assembly",
+    "Linux Systems Programming",
+    "Embedded Systems Development",
+    "Algorithms and Data Structures",
+    "Version Control (Git)",
+    "Debugging and Profiling Tools"
+  ]
+}
+

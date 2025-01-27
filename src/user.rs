@@ -6,21 +6,36 @@ use serde::{Deserialize, Serialize};
 pub struct Person {
     pub name: String,
     pub address: String,
-    pub email: String,
-    pub phone: String,
+    pub contact: Contact,
     pub summary: String,
     pub work_experience: Option<Vec<Work>>,
     pub education: Vec<Edu>,
     pub skills: Vec<String>,
     pub projects: Option<Vec<Project>>,
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Contact {
+    pub email: String,
+    pub phone: String,
+    pub linkedin: String,
+    pub github: String,
+}
+impl Display for Contact {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}, {} {} {}",
+            self.email, self.phone, self.linkedin, self.github
+        )
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Project {
     pub name: String,
     pub description: String,
     pub technologies: Vec<String>,
-    pub start_date: String,
-    pub end_date: String,
     pub url: String,
 }
 
