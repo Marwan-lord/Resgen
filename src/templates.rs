@@ -14,11 +14,8 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
                 .styled_string(format!("Address: {}", &p.address), style::Effect::Italic)
                 .aligned(Alignment::Center),
         )
-        .element(
-            elements::Paragraph::default()
-                .styled_string(&p.contact.to_string(), style::Effect::Italic)
-                .aligned(Alignment::Center),
-        );
+        .element(elements::Break::new(1))
+        .element(elements::Paragraph::new(&p.contact.to_string()).aligned(Alignment::Center));
 
     doc.push(header_layout);
     doc.push(elements::Break::new(1));
@@ -28,12 +25,15 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
     doc.push(elements::Break::new(1));
 
     doc.push(elements::Paragraph::new("Education").styled(style::Effect::Bold));
-    doc.push(elements::Break::new(1));
+
     for e in &p.education {
+        let courses = &e.courses.join(", ");
         doc.push(
             elements::LinearLayout::vertical()
                 .element(elements::Paragraph::new(&e.degree))
                 .element(elements::Paragraph::new(&e.institution))
+                .element(elements::Paragraph::new(format!("GPA: {}", &e.gpa)))
+                .element(elements::Paragraph::new(format!("Courses: {}", courses)))
                 .element(
                     elements::Paragraph::new(format!("{} - {}", &e.start_date, &e.end_date))
                         .aligned(Alignment::Right),
@@ -43,8 +43,13 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
     doc.push(elements::Break::new(1));
 
     if let Some(exp) = &p.work_experience {
-        doc.push(elements::Paragraph::new("Work History").styled(style::Effect::Bold));
+        doc.push(elements::Paragraph::new("Work Experience").styled(style::Effect::Bold));
         for e in exp {
+            let mut achievement_list = elements::UnorderedList::new();
+            for ach in &e.achievements {
+                achievement_list.push(elements::Paragraph::new(ach));
+            }
+
             doc.push(
                 elements::UnorderedList::with_bullet("-").element(
                     elements::LinearLayout::vertical()
@@ -53,7 +58,8 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
                             elements::Paragraph::new(format!("At {}", &e.company))
                                 .styled(style::Effect::Italic),
                         )
-                        .element(elements::Paragraph::new(&e.description))
+                        .element(elements::Break::new(1))
+                        .element(achievement_list)
                         .element(
                             elements::Paragraph::new(format!(
                                 "{} - {}",
@@ -70,11 +76,7 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
     if let Some(projs) = &p.projects {
         doc.push(elements::Paragraph::new("Projects").styled(style::Effect::Bold));
         for proj in projs {
-            let mut used_tech = String::new();
-            for used in &proj.technologies {
-                used_tech.push_str(used.as_str());
-                used_tech.push(' ');
-            }
+            let used_tech = proj.technologies.join(", ");
             doc.push(
                 elements::UnorderedList::with_bullet("-").element(
                     elements::LinearLayout::vertical()
@@ -82,7 +84,7 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
                         .element(elements::Paragraph::new(&proj.url).styled(style::Effect::Italic))
                         .element(elements::Paragraph::new(&proj.description))
                         .element(elements::Paragraph::new(format!(
-                            "Technologies: [{}]",
+                            "Technologies: {}",
                             used_tech
                         ))),
                 ),
@@ -92,13 +94,18 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
     }
     doc.push(elements::Paragraph::new("Skills").styled(style::Effect::Bold));
 
-    let mut string_of_skills = String::new();
-    for s in &p.skills {
-        string_of_skills.push_str(s.as_str());
-        string_of_skills.push_str(" | ");
-    }
+    add_paragraph(doc, "Languages", &p.skills.languages);
+    add_paragraph(doc, "Technicals", &p.skills.technical);
+    add_paragraph(doc, "Certifications", &p.skills.certifications);
+    add_paragraph(doc, "Tools", &p.skills.tools);
+    add_paragraph(doc, "Version Control", &p.skills.version_control);
+}
 
-    doc.push(elements::Paragraph::new(string_of_skills));
+fn add_paragraph(doc: &mut Document, label: &str, items: &Option<Vec<String>>) {
+    if let Some(item) = items {
+        let joined = item.join(", ");
+        doc.push(elements::Paragraph::new(format!("{}: {}", label, joined)));
+    }
 }
 
 pub fn gen_clean_temp(doc: &mut Document, p: &Person) {
@@ -115,6 +122,10 @@ pub fn gen_clean_temp(doc: &mut Document, p: &Person) {
     if let Some(exp) = &p.work_experience {
         doc.push(elements::Paragraph::new("Work History").styled(style::Effect::Bold));
         for e in exp {
+            let mut achievement_list = elements::UnorderedList::new();
+            for ach in &e.achievements {
+                achievement_list.push(elements::Paragraph::new(ach));
+            }
             doc.push(
                 elements::UnorderedList::with_bullet("•").element(
                     elements::LinearLayout::vertical()
@@ -129,7 +140,7 @@ pub fn gen_clean_temp(doc: &mut Document, p: &Person) {
                             ))
                             .aligned(Alignment::Right),
                         )
-                        .element(elements::Paragraph::new(&e.description)),
+                        .element(achievement_list),
                 ),
             );
             doc.push(elements::Break::new(1));
@@ -151,7 +162,7 @@ pub fn gen_clean_temp(doc: &mut Document, p: &Person) {
                         .element(elements::Paragraph::new(&proj.description))
                         .element(elements::Paragraph::new(&proj.url).styled(style::Effect::Italic))
                         .element(elements::Paragraph::new(format!(
-                            "Technologies: [{}]",
+                            "Technologies: {}",
                             used_tech
                         ))),
                 ),
@@ -161,12 +172,14 @@ pub fn gen_clean_temp(doc: &mut Document, p: &Person) {
     }
 
     doc.push(elements::Paragraph::new("Education").styled(style::Effect::Bold));
-    doc.push(elements::Break::new(1));
     for e in &p.education {
+        let courses = &e.courses.join(", ");
         doc.push(
             elements::LinearLayout::vertical()
                 .element(elements::Paragraph::new(&e.institution))
                 .element(elements::Paragraph::new(&e.degree))
+                .element(elements::Paragraph::new(&e.gpa))
+                .element(elements::Paragraph::new(courses))
                 .element(
                     elements::Paragraph::new(format!("{} - {}", &e.start_date, &e.end_date))
                         .aligned(Alignment::Right),
@@ -175,12 +188,9 @@ pub fn gen_clean_temp(doc: &mut Document, p: &Person) {
     }
 
     doc.push(elements::Paragraph::new("Skills").styled(style::Effect::Bold));
-
-    let mut string_of_skills = String::new();
-    for s in &p.skills {
-        string_of_skills.push_str(s.as_str());
-        string_of_skills.push_str(" | ");
-    }
-
-    doc.push(elements::Paragraph::new(string_of_skills));
+    add_paragraph(doc, "Languages", &p.skills.languages);
+    add_paragraph(doc, "Technicals", &p.skills.technical);
+    add_paragraph(doc, "Certifications", &p.skills.certifications);
+    add_paragraph(doc, "Tools", &p.skills.tools);
+    add_paragraph(doc, "Version Control", &p.skills.version_control);
 }

@@ -10,8 +10,16 @@ pub struct Person {
     pub summary: String,
     pub work_experience: Option<Vec<Work>>,
     pub education: Vec<Edu>,
-    pub skills: Vec<String>,
+    pub skills: Skills,
     pub projects: Option<Vec<Project>>,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Skills {
+    pub languages: Option<Vec<String>>,
+    pub version_control: Option<Vec<String>>,
+    pub certifications: Option<Vec<String>>,
+    pub technical: Option<Vec<String>>,
+    pub tools: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -25,7 +33,7 @@ impl Display for Contact {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{}, {} {} {}",
+            " {} | {} | {} | {} ",
             self.email, self.phone, self.linkedin, self.github
         )
     }
@@ -45,18 +53,18 @@ pub struct Work {
     pub company: String,
     pub start_date: String,
     pub end_date: String,
-    pub description: String,
+    pub achievements: Vec<String>,
 }
 
-impl Display for Work {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}, {}  from {} to  {} {}",
-            self.title, self.company, self.start_date, self.end_date, self.description
-        )
-    }
-}
+//impl Display for Work {
+//    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+//        write!(
+//            f,
+//            "{}, {}  from {} to  {} {}",
+//            self.title, self.company, self.start_date, self.end_date, self.achievements
+//        )
+//    }
+//}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Edu {
@@ -64,6 +72,8 @@ pub struct Edu {
     pub institution: String,
     pub start_date: String,
     pub end_date: String,
+    pub gpa: String,
+    pub courses: Vec<String>,
 }
 
 impl Display for Person {
