@@ -178,8 +178,8 @@ pub fn gen_clean_temp(doc: &mut Document, p: &Person) {
             elements::LinearLayout::vertical()
                 .element(elements::Paragraph::new(&e.institution))
                 .element(elements::Paragraph::new(&e.degree))
-                .element(elements::Paragraph::new(&e.gpa))
-                .element(elements::Paragraph::new(courses))
+                .element(elements::Paragraph::new(format!("GPA: {}", &e.gpa)))
+                .element(elements::Paragraph::new(format!("Courses: {}", courses)))
                 .element(
                     elements::Paragraph::new(format!("{} - {}", &e.start_date, &e.end_date))
                         .aligned(Alignment::Right),
