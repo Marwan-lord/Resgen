@@ -8,8 +8,8 @@ Resgen is a lightweight, command-line tool that converts structured JSON data in
 - resgen -f cv.json
 
 ## Result PDF
-[here](https://github.com/Marwan-lord/Resgen/blob/main/default_cv.pdf)
-[here](https://github.com/Marwan-lord/Resgen/blob/main/clean_cv.pdf)
+The default template: [here](https://github.com/Marwan-lord/Resgen/blob/main/default_cv.pdf)  
+The clean option: [here](https://github.com/Marwan-lord/Resgen/blob/main/clean_cv.pdf)  
 
 ## Features
 
