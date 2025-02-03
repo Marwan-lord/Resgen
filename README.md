@@ -2,10 +2,15 @@
 
 Resgen is a lightweight, command-line tool that converts structured JSON data into polished PDF resumes. Built with Rust, it prioritizes speed, simplicity, and customization while avoiding bloated dependencies. Define your resume once in JSON, then generate consistent PDF versions tailored to different opportunities, it prioritizes privacy as no data is collected unlike cloud alterinatives.  
 
-
 ## Examples
-- resgen -f resume.json -o mycv.pdf -t clean  
-- resgen -f cv.json
+
+``` bash
+$ resgen -f resume.json -o mycv.pdf -t clean  
+```
+
+``` bash
+$ resgen -f cv.json
+```
 
 ## Result PDF
 The default template: [here](https://github.com/Marwan-lord/Resgen/blob/main/default_cv.pdf)  

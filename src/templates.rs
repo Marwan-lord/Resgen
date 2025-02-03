@@ -18,7 +18,7 @@ fn dt_header(doc: &mut Document, p: &Person) {
                 .aligned(Alignment::Center),
         )
         .element(Break::new(1))
-        .element(Paragraph::new(&p.contact.to_string()).aligned(Alignment::Center));
+        .element(Paragraph::new(p.contact.to_string()).aligned(Alignment::Center));
 
     doc.push(header_layout);
     doc.push(Break::new(1));

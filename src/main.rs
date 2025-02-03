@@ -35,7 +35,6 @@ fn main() -> anyhow::Result<()> {
         let data = fs::read_to_string(fp)?;
         let p: Person = serde_json::from_str(data.as_str())?;
 
-        // Lookup fonts
         let font_dir = FONT_DIRS
             .iter()
             .find(|path| std::path::Path::new(path).exists())
