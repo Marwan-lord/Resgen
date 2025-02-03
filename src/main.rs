@@ -23,6 +23,7 @@ const FONT_DIRS: &[&str] = &[
     "/run/current-system/sw/share/X11/fonts",
     "%LOCALAPPDATA%\\Microsoft\\Windows\\Fonts",
     "C:\\Windows\\Fonts",
+    "C:\\Windows\\Fonts\\Liberation",
 ];
 
 const DEFAULT_FONT_NAME: &'static str = "LiberationSans";
