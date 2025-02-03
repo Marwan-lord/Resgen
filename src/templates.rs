@@ -2,7 +2,7 @@ use genpdf::{elements::{self, Break, LinearLayout, Paragraph, }, style, Alignmen
 
 use crate::user::Person;
 
-fn dt_print_header(doc: &mut Document, p: &Person) {
+fn dt_header(doc: &mut Document, p: &Person) {
     let header_layout = LinearLayout::vertical()
         .element(
             Paragraph::default()
@@ -21,13 +21,13 @@ fn dt_print_header(doc: &mut Document, p: &Person) {
     doc.push(Break::new(1));
 }
 
-fn dt_print_summary(doc: &mut Document, p: &Person) {
+fn dt_summary(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::new("Summary").styled(style::Effect::Bold));
     doc.push(Paragraph::new(&p.summary));
     doc.push(Break::new(1));
 }
 
-fn dt_print_edu(doc: &mut Document, p: &Person) {
+fn dt_edu(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::new("Education").styled(style::Effect::Bold));
 
     for e in &p.education {
@@ -48,7 +48,7 @@ fn dt_print_edu(doc: &mut Document, p: &Person) {
 }
 
 
-fn dt_print_we(doc: &mut Document, p: &Person) {
+fn dt_we(doc: &mut Document, p: &Person) {
     if let Some(exp) = &p.work_experience {
         doc.push(Paragraph::new("Work Experience").styled(style::Effect::Bold));
         for e in exp {
@@ -81,7 +81,7 @@ fn dt_print_we(doc: &mut Document, p: &Person) {
     }
 }
 
-fn dt_print_projs(doc: &mut Document, p: &Person) {
+fn dt_projs(doc: &mut Document, p: &Person) {
     if let Some(projs) = &p.projects {
         doc.push(Paragraph::new("Projects").styled(style::Effect::Bold));
         for proj in projs {
@@ -121,11 +121,11 @@ fn add_paragraph(doc: &mut Document, label: &str, items: &Option<Vec<String>>) {
 }
 
 fn dt_init(doc: &mut Document, p: &Person) {
-    dt_print_header(doc, p);
-    dt_print_summary(doc, p);
-    dt_print_edu(doc, p);
-    dt_print_we(doc, p);
-    dt_print_projs(doc, p);
+    dt_header(doc, p);
+    dt_summary(doc, p);
+    dt_edu(doc, p);
+    dt_we(doc, p);
+    dt_projs(doc, p);
     dt_skills(doc, p);
 }
 

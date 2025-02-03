@@ -14,11 +14,11 @@ use templates::{gen_clean_temp, gen_default_temp};
 const FONT_DIRS: &[&str] = &[
     "/usr/share/fonts/liberation",
     "/usr/share/fonts/truetype/liberation",
-    ".fonts/",
+    "/usr/share/fonts/",
     "./fonts/",
     "/home/$USER/.fonts",
     "/home/$USER/.local/share/fonts/",
-    "%LOCALAPPDATA%i\\Microsoft\\Windows\\Fonts",
+    "%LOCALAPPDATA%\\Microsoft\\Windows\\Fonts",
     "C:\\Windows\\Fonts",
 ];
 
@@ -31,6 +31,7 @@ fn main() {
         let data = fs::read_to_string(fp).expect("File not found");
         let p: Person = serde_json::from_str(data.as_str()).expect("Unable to read json from file");
 
+        // Lookup fonts
         let font_dir = FONT_DIRS
             .iter()
             .find(|path| std::path::Path::new(path).exists())
