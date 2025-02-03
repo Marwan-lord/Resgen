@@ -1,10 +1,12 @@
 pub mod cli;
 pub mod templates;
 pub mod user;
+use std::process::{self};
 use std::fs;
 
 use crate::user::Person;
 
+use colored::Colorize;
 use genpdf::{
     fonts::{self},
     Document, SimplePageDecorator,
@@ -16,34 +18,38 @@ const FONT_DIRS: &[&str] = &[
     "/usr/share/fonts/truetype/liberation",
     "/usr/share/fonts/",
     "./fonts/",
-    "/home/$USER/.fonts",
-    "/home/$USER/.local/share/fonts/",
+    "~/.fonts",
+    "~/.local/share/fonts",
+    "/run/current-system/sw/share/X11/fonts",
     "%LOCALAPPDATA%\\Microsoft\\Windows\\Fonts",
     "C:\\Windows\\Fonts",
 ];
 
 const DEFAULT_FONT_NAME: &'static str = "LiberationSans";
 
-fn main() {
+fn main() -> anyhow::Result<()>{
     let parsed = cli::Cli::run();
 
     if let Some(fp) = parsed.get_one::<String>("filename") {
-        let data = fs::read_to_string(fp).expect("File not found");
-        let p: Person = serde_json::from_str(data.as_str()).expect("Unable to read json from file");
+        let data = fs::read_to_string(fp)?;
+        let p: Person = serde_json::from_str(data.as_str())?;
 
         // Lookup fonts
         let font_dir = FONT_DIRS
             .iter()
             .find(|path| std::path::Path::new(path).exists())
-            .expect("Could not find font directory");
+            .unwrap_or_else(|| {
+                println!("{}: Font not found in any font directory, make sure the font {} is on your system","error".red(), DEFAULT_FONT_NAME);
+                process::exit(1);
+            });
 
         let font =
-            fonts::from_files(font_dir, DEFAULT_FONT_NAME, None).expect("Failed to load font");
+            fonts::from_files(font_dir, DEFAULT_FONT_NAME, None)?;
 
         let mut doc = Document::new(font);
 
         doc.set_font_size(12);
-        doc.set_title("Resume Document");
+        doc.set_title("Resume");
 
         let mut deco = SimplePageDecorator::new();
         deco.set_margins(10);
@@ -61,4 +67,6 @@ fn main() {
                 .expect("Error Rendering file to output");
         }
     }
+
+    Ok(())
 }
