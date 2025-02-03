@@ -1,8 +1,8 @@
 pub mod cli;
 pub mod templates;
 pub mod user;
-use std::process::{self};
 use std::fs;
+use std::process::{self};
 
 use crate::user::Person;
 
@@ -28,7 +28,7 @@ const FONT_DIRS: &[&str] = &[
 
 const DEFAULT_FONT_NAME: &'static str = "LiberationSans";
 
-fn main() -> anyhow::Result<()>{
+fn main() -> anyhow::Result<()> {
     let parsed = cli::Cli::run();
 
     if let Some(fp) = parsed.get_one::<String>("filename") {
@@ -40,12 +40,16 @@ fn main() -> anyhow::Result<()>{
             .iter()
             .find(|path| std::path::Path::new(path).exists())
             .unwrap_or_else(|| {
-                println!("{}: Font not found in any font directory, make sure the font {} is on your system","error".red(), DEFAULT_FONT_NAME);
+                println!(
+                    "{}: Font not found in any font directory,
+                    make sure the font {} is on your system",
+                    "error".red(),
+                    DEFAULT_FONT_NAME
+                );
                 process::exit(1);
             });
 
-        let font =
-            fonts::from_files(font_dir, DEFAULT_FONT_NAME, None)?;
+        let font = fonts::from_files(font_dir, DEFAULT_FONT_NAME, None)?;
 
         let mut doc = Document::new(font);
 
