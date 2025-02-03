@@ -19,7 +19,7 @@ impl Cli {
             .short('t')
             .default_value("default")
             .long("temp")
-            .help("Your resume's template options: minimal, clean")
+            .help("Your resume's template. options: minimal, clean")
         )
         .arg(
             Arg::new("output")
