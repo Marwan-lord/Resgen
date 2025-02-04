@@ -5,6 +5,12 @@ Built with Rust, it prioritizes speed, simplicity,and customization
 while avoiding bloated dependencies.
 Define your resume once in JSON,then generate consistent PDF versions tailored to different opportunities.
 
+>[!WARNING]
+> If you experience any problems with fonts please submit a problem 
+
+## Prerequisites
+1. Having LiberationSans font installed
+
 ## Getting Started
 1. Make a file ending with .json then copy the file temp.json found in this repo to the file
 2. fill the the required fields and remove the optional fields (eg. Work Expreince, Projects, all skills fields are optional but you must have one at least)
