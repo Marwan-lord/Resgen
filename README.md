@@ -5,8 +5,13 @@ Built with Rust, it prioritizes speed, simplicity,and customization
 while avoiding bloated dependencies.
 Define your resume once in JSON,then generate consistent PDF versions tailored to different opportunities.
 
-## Examples
+## Getting Started
+1. Make a file ending with .json then copy the file temp.json found in this repo to the file
+2. fill the the required fields and remove the optional fields (eg. Work Expreince, Projects, all skills fields are optional but you must have one at least)
+3. save and exit then execute
 
+
+### Producing the Output resume
 ``` bash
  resgen -f resume.json -o mycv.pdf -t clean  
 ```

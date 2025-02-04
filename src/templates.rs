@@ -217,10 +217,10 @@ fn ct_edu(doc: &mut Document, p: &Person) {
             LinearLayout::vertical()
                 .element(Paragraph::new(e.institution))
                 .element(Paragraph::new(e.degree))
-                .element(Paragraph::new(format!("GPA: {}", &e.gpa)))
+                .element(Paragraph::new(format!("GPA: {}", e.gpa)))
                 .element(Paragraph::new(format!("Courses: {}", courses)))
                 .element(
-                    Paragraph::new(format!("{} - {}", &e.start_date, &e.end_date))
+                    Paragraph::new(format!("{} - {}", e.start_date, e.end_date))
                         .aligned(Alignment::Right),
                 ),
         );
