@@ -9,12 +9,12 @@ fn dt_header(doc: &mut Document, p: &Person) {
     let header_layout = LinearLayout::vertical()
         .element(
             Paragraph::default()
-                .styled_string(p.name, style::Effect::Bold)
+                .styled_string(p.name, style::Style::new().bold().with_font_size(15))
                 .aligned(Alignment::Center),
         )
         .element(
             Paragraph::default()
-                .styled_string(format!("Address: {}", &p.address), style::Effect::Italic)
+                .styled_string(format!("Address: {}", p.address), style::Effect::Italic)
                 .aligned(Alignment::Center),
         )
         .element(Break::new(1))
@@ -25,26 +25,30 @@ fn dt_header(doc: &mut Document, p: &Person) {
 }
 
 fn dt_summary(doc: &mut Document, p: &Person) {
-    doc.push(Paragraph::new("Summary").styled(style::Effect::Bold));
+    doc.push(Paragraph::new("Summary").styled(style::Style::new().bold().with_font_size(14)));
+    doc.push(Break::new(0.5));
     doc.push(Paragraph::new(p.summary));
     doc.push(Break::new(1));
 }
 
 fn dt_edu(doc: &mut Document, p: &Person) {
-    doc.push(Paragraph::new("Education").styled(style::Effect::Bold));
+    doc.push(Paragraph::new("Education").styled(style::Style::new().bold().with_font_size(14)));
 
+    doc.push(Break::new(0.5));
     for e in &p.education {
         let courses = &e.courses.join(", ");
         doc.push(
             LinearLayout::vertical()
                 .element(Paragraph::new(e.degree))
-                .element(Paragraph::new(e.institution))
-                .element(Paragraph::new(format!("GPA: {}", &e.gpa)))
-                .element(Paragraph::new(format!("Courses: {}", courses)))
                 .element(
-                    Paragraph::new(format!("{} - {}", &e.start_date, &e.end_date))
+                    Paragraph::new(format!("{} - {}", e.start_date, e.end_date))
                         .aligned(Alignment::Right),
-                ),
+                )
+                .element(Paragraph::new(format!(
+                    "Graduated from {} with GPA {}",
+                    e.institution, e.gpa
+                )))
+                .element(Paragraph::new(format!("Courses: {}", courses))),
         );
     }
     doc.push(Break::new(1));
@@ -52,15 +56,19 @@ fn dt_edu(doc: &mut Document, p: &Person) {
 
 fn dt_we(doc: &mut Document, p: &Person) {
     if let Some(exp) = &p.work_experience {
-        doc.push(Paragraph::new("Work Experience").styled(style::Effect::Bold));
+        doc.push(
+            Paragraph::new("Work Experience").styled(style::Style::new().bold().with_font_size(14)),
+        );
+
+        doc.push(Break::new(0.5));
         for e in exp {
-            let mut achievement_list = elements::UnorderedList::new();
+            let mut achievement_list = elements::UnorderedList::with_bullet("•");
             for ach in &e.achievements {
                 achievement_list.push(Paragraph::new(*ach));
             }
 
             doc.push(
-                elements::UnorderedList::new().element(
+                elements::UnorderedList::with_bullet("•").element(
                     LinearLayout::vertical()
                         .element(Paragraph::new(e.title).styled(style::Effect::Bold))
                         .element(
@@ -79,14 +87,14 @@ fn dt_we(doc: &mut Document, p: &Person) {
         }
     }
 }
-
 fn dt_projs(doc: &mut Document, p: &Person) {
     if let Some(projs) = &p.projects {
-        doc.push(Paragraph::new("Projects").styled(style::Effect::Bold));
+        doc.push(Paragraph::new("Projects").styled(style::Style::new().bold().with_font_size(14)));
+        doc.push(Break::new(0.5));
         for proj in projs {
             let used_tech = proj.technologies.join(", ");
             doc.push(
-                elements::UnorderedList::new().element(
+                elements::UnorderedList::with_bullet("•").element(
                     LinearLayout::vertical()
                         .element(Paragraph::new(proj.name).styled(style::Effect::Bold))
                         .element(Paragraph::new(proj.url).styled(style::Effect::Italic))
@@ -100,7 +108,8 @@ fn dt_projs(doc: &mut Document, p: &Person) {
 }
 
 fn dt_skills(doc: &mut Document, p: &Person) {
-    doc.push(Paragraph::new("Skills").styled(style::Effect::Bold));
+    doc.push(Paragraph::new("Skills").styled(style::Style::new().bold().with_font_size(14)));
+    doc.push(Break::new(0.5));
     add_paragraph(doc, "Languages", &p.skills.languages);
     add_paragraph(doc, "Technicals", &p.skills.technical);
     add_paragraph(doc, "Certifications", &p.skills.certifications);
@@ -129,22 +138,29 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
 }
 
 fn ct_header(doc: &mut Document, p: &Person) {
-    doc.push(Paragraph::default().styled_string(format!("{}", &p.name), style::Effect::Bold));
+    doc.push(Paragraph::default().styled_string(
+        format!("{}", &p.name),
+        style::Style::new().bold().with_font_size(15),
+    ));
     doc.push(Paragraph::new(&p.contact.to_string()));
     doc.push(Break::new(1));
 }
 
 fn ct_summary(doc: &mut Document, p: &Person) {
-    doc.push(Paragraph::new("Summary").styled(style::Effect::Bold));
+    doc.push(Paragraph::new("Summary").styled(style::Style::new().bold().with_font_size(14)));
+    doc.push(Break::new(0.5));
     doc.push(Paragraph::new(p.summary));
     doc.push(Break::new(1));
 }
 
 fn ct_we(doc: &mut Document, p: &Person) {
     if let Some(exp) = &p.work_experience {
-        doc.push(Paragraph::new("Work History").styled(style::Effect::Bold));
+        doc.push(
+            Paragraph::new("Work History").styled(style::Style::new().bold().with_font_size(14)),
+        );
+        doc.push(Break::new(0.5));
         for e in exp {
-            let mut achievement_list = elements::UnorderedList::new();
+            let mut achievement_list = elements::UnorderedList::with_bullet("•");
             for ach in &e.achievements {
                 achievement_list.push(Paragraph::new(*ach));
             }
@@ -169,7 +185,9 @@ fn ct_we(doc: &mut Document, p: &Person) {
 
 fn ct_projs(doc: &mut Document, p: &Person) {
     if let Some(projs) = &p.projects {
-        doc.push(Paragraph::new("Projects").styled(style::Effect::Bold));
+        doc.push(Paragraph::new("Projects").styled(style::Style::new().bold().with_font_size(14)));
+        doc.push(Break::new(0.5));
+
         for proj in projs {
             let mut used_tech = String::new();
             for used in &proj.technologies {
@@ -191,7 +209,8 @@ fn ct_projs(doc: &mut Document, p: &Person) {
 }
 
 fn ct_edu(doc: &mut Document, p: &Person) {
-    doc.push(Paragraph::new("Education").styled(style::Effect::Bold));
+    doc.push(Paragraph::new("Education").styled(style::Style::new().bold().with_font_size(14)));
+    doc.push(Break::new(0.5));
     for e in &p.education {
         let courses = &e.courses.join(", ");
         doc.push(
@@ -209,7 +228,9 @@ fn ct_edu(doc: &mut Document, p: &Person) {
 }
 
 fn ct_skills(doc: &mut Document, p: &Person) {
-    doc.push(Paragraph::new("Skills").styled(style::Effect::Bold));
+    doc.push(Paragraph::new("Skills").styled(style::Style::new().bold().with_font_size(14)));
+    doc.push(Break::new(0.5));
+
     add_paragraph(doc, "Languages", &p.skills.languages);
     add_paragraph(doc, "Technicals", &p.skills.technical);
     add_paragraph(doc, "Certifications", &p.skills.certifications);
