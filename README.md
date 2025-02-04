@@ -6,7 +6,7 @@ while avoiding bloated dependencies.
 Define your resume once in JSON,then generate consistent PDF versions tailored to different opportunities.
 
 >[!WARNING]
-> If you experience any problems with fonts please submit a problem 
+> The app might not work due to problems with reading fonts from font directories if you encounter such problem please submit an issue
 
 ## Prerequisites
 1. Having LiberationSans font installed
