@@ -54,7 +54,7 @@ fn main() -> anyhow::Result<()> {
         let mut doc = Document::new(font);
 
         doc.set_font_size(12);
-        doc.set_title("Resume");
+        doc.set_title("CV");
 
         let mut deco = SimplePageDecorator::new();
         deco.set_margins(10);
