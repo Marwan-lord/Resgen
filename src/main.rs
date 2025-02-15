@@ -29,6 +29,7 @@ const FONT_DIRS: &[&str] = &[
 
 const DEFAULT_FONT_NAME: &'static str = "LiberationSans";
 
+
 fn main() -> anyhow::Result<()> {
     let parsed = cli::Cli::run();
 
