@@ -1,17 +1,17 @@
 pub mod cli;
-pub mod templates;
+pub mod temps;
 pub mod user;
-use std::fs;
-use std::process;
 
 use crate::user::Person;
+use std::fs;
+use std::process;
 
 use colored::Colorize;
 use genpdf::{
     fonts::{self},
     Document, SimplePageDecorator,
 };
-use templates::{gen_clean_temp, gen_default_temp};
+use temps::{clean::gen_clean_temp, default::gen_default_temp};
 
 const FONT_DIRS: &[&str] = &[
     "/usr/share/fonts/liberation",
@@ -28,7 +28,6 @@ const FONT_DIRS: &[&str] = &[
 ];
 
 const DEFAULT_FONT_NAME: &str = "LiberationSans";
-
 
 fn main() -> anyhow::Result<()> {
     let parsed = cli::Cli::run();
