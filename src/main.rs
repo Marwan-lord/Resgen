@@ -27,7 +27,7 @@ const FONT_DIRS: &[&str] = &[
     "/Library/Fonts/",
 ];
 
-const DEFAULT_FONT_NAME: &'static str = "LiberationSans";
+const DEFAULT_FONT_NAME: &str = "LiberationSans";
 
 
 fn main() -> anyhow::Result<()> {

@@ -139,10 +139,10 @@ pub fn gen_default_temp(doc: &mut Document, p: &Person) {
 
 fn ct_header(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::default().styled_string(
-        format!("{}", &p.name),
+        p.name.to_string(),
         style::Style::new().bold().with_font_size(15),
     ));
-    doc.push(Paragraph::new(&p.contact.to_string()));
+    doc.push(Paragraph::new(p.contact.to_string()));
     doc.push(Break::new(1));
 }
 

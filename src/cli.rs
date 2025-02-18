@@ -4,7 +4,7 @@ pub struct Cli;
 
 impl Cli {
     pub fn run() -> ArgMatches {
-        let parsed = command!()
+        command!()
             .author("Marwan Mohammed <merolokamino@gmail.com>")
             .about(
                 "Resgen is a lightning-fast static resume generator 
@@ -31,8 +31,6 @@ impl Cli {
                     .help("choose the name of the output file")
                     .default_value("cv.pdf"),
             )
-            .get_matches();
-
-        parsed
+            .get_matches()
     }
 }

@@ -29,7 +29,7 @@ pub struct Contact<'a> {
     pub linkedin: &'a str,
     pub github: &'a str,
 }
-impl<'a> Display for Contact<'a> {
+impl Display for Contact<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -76,7 +76,7 @@ pub struct Edu<'a> {
     pub courses: Vec<&'a str>,
 }
 
-impl<'a> Display for Person<'a> {
+impl Display for Person<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let strings = self
             .education
@@ -88,7 +88,7 @@ impl<'a> Display for Person<'a> {
     }
 }
 
-impl<'a> Display for Edu<'a> {
+impl Display for Edu<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
