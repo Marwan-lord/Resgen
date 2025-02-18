@@ -2,7 +2,7 @@ pub mod cli;
 pub mod templates;
 pub mod user;
 use std::fs;
-use std::process::{self};
+use std::process;
 
 use crate::user::Person;
 
