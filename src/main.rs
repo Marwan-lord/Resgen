@@ -31,6 +31,7 @@ const FONT_DIRS: &[&str] = &[
 const DEFAULT_FONT_NAME: &str = "LiberationSans";
 
 fn main() -> anyhow::Result<()> {
+
     let parsed = cli::Cli::run();
 
     if let Some(fp) = parsed.get_one::<String>("filename") {
