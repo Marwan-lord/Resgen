@@ -11,6 +11,7 @@ use genpdf::{
     fonts::{self},
     Document, SimplePageDecorator,
 };
+
 use temps::{clean::gen_clean_temp, default::gen_default_temp};
 
 const FONT_DIRS: &[&str] = &[
