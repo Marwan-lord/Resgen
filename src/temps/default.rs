@@ -73,7 +73,6 @@ fn dt_we(doc: &mut Document, p: &Person) {
                         .element(Paragraph::new(e.title).styled(style::Effect::Bold))
                         .element(
                             Paragraph::new(format!("At {}", &e.company))
-                                .styled(style::Effect::Italic),
                         )
                         .element(Break::new(1))
                         .element(achievement_list)
