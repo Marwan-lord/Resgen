@@ -54,7 +54,6 @@ fn main() -> anyhow::Result<()> {
         let font = fonts::from_files(font_dir, DEFAULT_FONT_NAME, None)?;
 
         let mut doc = Document::new(font);
-
         doc.set_font_size(12);
         doc.set_title("CV");
 
