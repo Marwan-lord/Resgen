@@ -52,6 +52,13 @@
       "description": "Developed internal documentation system for common IT issues",
       "technologies": ["Confluence", "SQL", "PowerShell"],
       "url": "github.com/JohnCarter/uskb.git"
+    },
+
+    {
+      "name": "Network Health Monitor",
+      "description": "Created automated system monitoring tool that alerts for server downtime using custom scripts",
+      "technologies": ["Python", "Nagios", "Bash", "Prometheus"],
+      "url": "github.com/JohnCarter/netmonitor.git"
     }
   ],
   "skills": {

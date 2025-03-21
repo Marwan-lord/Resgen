@@ -161,6 +161,7 @@ fn dt_init(doc: &mut Document, p: &Person) {
     dt_edu(doc, p);
     doc.push(Line);
     dt_we(doc, p);
+    doc.push(Line);
     dt_projs(doc, p);
     doc.push(Line);
     dt_skills(doc, p);
