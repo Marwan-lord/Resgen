@@ -1,9 +1,42 @@
 use genpdf::{
     elements::{self, Break, LinearLayout, Paragraph},
-    style, Alignment, Document, Element,
+    style, Alignment, Document, Element, Position, RenderResult, Size,
 };
 
 use crate::user::Person;
+
+struct Line;
+
+impl Element for Line {
+    fn render(
+        &mut self,
+        _: &genpdf::Context,
+        area: genpdf::render::Area<'_>,
+        style: style::Style,
+    ) -> Result<genpdf::RenderResult, genpdf::error::Error> {
+        area.draw_line(
+            vec![
+                Position {
+                    x: 0.into(),
+                    y: 0.into(),
+                },
+                Position {
+                    x: area.size().width,
+                    y: 0.into(),
+                },
+            ],
+            style.with_color(style::Color::Rgb(0, 0, 0)),
+        );
+
+        Ok(RenderResult {
+            size: Size {
+                width: area.size().width,
+                height: 1.into(),
+            },
+            has_more: false,
+        })
+    }
+}
 
 fn dt_header(doc: &mut Document, p: &Person) {
     let header_layout = LinearLayout::vertical()
@@ -71,9 +104,7 @@ fn dt_we(doc: &mut Document, p: &Person) {
                 elements::UnorderedList::with_bullet("•").element(
                     LinearLayout::vertical()
                         .element(Paragraph::new(e.title).styled(style::Effect::Bold))
-                        .element(
-                            Paragraph::new(format!("At {}", &e.company))
-                        )
+                        .element(Paragraph::new(format!("At {}", &e.company)))
                         .element(Break::new(1))
                         .element(achievement_list)
                         .element(
@@ -125,10 +156,13 @@ pub fn add_paragraph(doc: &mut Document, label: &str, items: &Option<Vec<String>
 
 fn dt_init(doc: &mut Document, p: &Person) {
     dt_header(doc, p);
+    doc.push(Line);
     dt_summary(doc, p);
     dt_edu(doc, p);
+    doc.push(Line);
     dt_we(doc, p);
     dt_projs(doc, p);
+    doc.push(Line);
     dt_skills(doc, p);
 }
 

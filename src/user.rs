@@ -29,6 +29,7 @@ pub struct Contact<'a> {
     pub linkedin: &'a str,
     pub github: &'a str,
 }
+
 impl Display for Contact<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
