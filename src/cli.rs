@@ -18,6 +18,13 @@ impl Cli {
                     .help("choose the json file to generate your resume"),
             )
             .arg(
+                Arg::new("font-path")
+                    .short('p')
+                    .required(false)
+                    .long("path")
+                .help("Path to the font you want to you if not set it will look in your OS default font path you can set it manually if you have problems")
+            )
+            .arg(
                 Arg::new("template")
                     .short('t')
                     .default_value("default")

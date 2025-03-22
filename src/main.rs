@@ -37,20 +37,23 @@ fn main() -> anyhow::Result<()> {
         let data = fs::read_to_string(fp)?;
         let p: Person = serde_json::from_str(data.as_str())?;
 
-        let font_dir = FONT_DIRS
-            .iter()
-            .find(|path| std::path::Path::new(path).exists())
-            .unwrap_or_else(|| {
-                println!(
-                    "{}: Font not found in any font directory,
+        let font = if let Some(fd) = parsed.get_one::<String>("font-path") {
+            fonts::from_files(fd, DEFAULT_FONT_NAME, None)?
+        } else {
+            let font_dir = FONT_DIRS
+                .iter()
+                .find(|path| std::path::Path::new(path).exists())
+                .unwrap_or_else(|| {
+                    println!(
+                        "{}: Font not found in any font directory,
                     make sure the font {} is on your system",
-                    "error".red(),
-                    DEFAULT_FONT_NAME
-                );
-                process::exit(1);
-            });
-
-        let font = fonts::from_files(font_dir, DEFAULT_FONT_NAME, None)?;
+                        "error".red(),
+                        DEFAULT_FONT_NAME
+                    );
+                    process::exit(1);
+                });
+            fonts::from_files(font_dir, DEFAULT_FONT_NAME, None)?
+        };
 
         let mut doc = Document::new(font);
         doc.set_font_size(12);
