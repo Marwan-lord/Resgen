@@ -5,10 +5,8 @@ pub mod user;
 use crate::user::Person;
 use std::fs;
 use std::path::Path;
-use std::process;
 
-use anyhow::Result;
-use colored::Colorize;
+use anyhow::{Context, Result};
 use genpdf::{
     fonts::{self, FontData, FontFamily},
     Document, SimplePageDecorator,
@@ -38,8 +36,7 @@ fn main() -> Result<()> {
     if let Some(fp) = parsed.get_one::<String>("filename") {
         let data = fs::read_to_string(fp)?;
         let person: Person = serde_json::from_str(&data)?;
-        let font = load_font(parsed.get_one::<String>("font-path"));
-
+        let font = load_font(parsed.get_one::<String>("font-path"))?;
         let mut doc = setup_document(font);
 
         apply_template(&mut doc, &person, parsed.get_one::<String>("template"));
@@ -53,21 +50,19 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn load_font(font_path: Option<&String>) -> FontFamily<FontData> {
+fn load_font(font_path: Option<&String>) -> Result<FontFamily<FontData>> {
     if let Some(fp) = font_path {
-        fonts::from_files(fp, DEFAULT_FONT_NAME, None).unwrap()
+        fonts::from_files(fp, DEFAULT_FONT_NAME, None)
+            .context(format!("Failed to load font from specified path: {}", fp))
     } else {
         let font_dir = FONT_DIRS.iter()
             .find(|&&path| Path::new(path).exists())
-            .unwrap_or_else(|| {
-                println!(
-                    "{}: Font not found in any font directory, make sure the font {} is on your system or specify the font directory with the -p option",
-                    "error".red(),
-                    DEFAULT_FONT_NAME
-                );
-                process::exit(1);
-            });
-        fonts::from_files(font_dir, DEFAULT_FONT_NAME, None).unwrap()
+            .context("Font not found in any font directory. Make sure the font is on your system or specify the font directory with the -p option")?;
+
+        fonts::from_files(font_dir, DEFAULT_FONT_NAME, None).context(format!(
+            "Failed to load font from default directory: {}",
+            font_dir
+        ))
     }
 }
 
