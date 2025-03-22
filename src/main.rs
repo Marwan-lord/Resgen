@@ -45,8 +45,7 @@ fn main() -> anyhow::Result<()> {
                 .find(|path| std::path::Path::new(path).exists())
                 .unwrap_or_else(|| {
                     println!(
-                        "{}: Font not found in any font directory,
-                    make sure the font {} is on your system",
+                        "{}: Font not found in any font directory,make sure the font {} is on your system or specify the font directory with the -p option",
                         "error".red(),
                         DEFAULT_FONT_NAME
                     );

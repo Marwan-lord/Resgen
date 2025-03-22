@@ -5,8 +5,6 @@ Built with Rust, it prioritizes speed, simplicity,and customization
 while avoiding bloated dependencies.
 Define your resume once in JSON,then generate consistent PDF versions tailored to different opportunities.
 
->[!WARNING]
-> The app might not work due to problems with reading fonts from font directories if you encounter such problem please submit an issue
 
 ## Prerequisites
 1. Having LiberationSans font installed
@@ -45,3 +43,4 @@ Requires [Rust toolchain](https://www.rust-lang.org/tools/install) installed.
 
 ```bash
 cargo install --git https://github.com/Marwan-lord/Resgen
+```
