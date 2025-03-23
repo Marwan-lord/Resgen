@@ -28,6 +28,21 @@ const FONT_DIRS: &[&str] = &[
     "/Library/Fonts/",
 ];
 
+#[derive(Debug)]
+enum Template {
+    Clean,
+    Default,
+}
+
+impl Template {
+    fn from_str(template: &str) -> Self {
+        match template {
+            "clean" => Template::Clean,
+            _ => Template::Default,
+        }
+    }
+}
+
 const DEFAULT_FONT_NAME: &str = "LiberationSans";
 
 fn main() -> Result<()> {
@@ -53,11 +68,14 @@ fn main() -> Result<()> {
 fn load_font(font_path: Option<&String>) -> Result<FontFamily<FontData>> {
     if let Some(fp) = font_path {
         fonts::from_files(fp, DEFAULT_FONT_NAME, None)
-            .context(format!("Failed to load font from specified path: {}", fp))
+            .context(format!("Failed to load font from specified path: {:?}", fp))
     } else {
         let font_dir = FONT_DIRS.iter()
             .find(|&&path| Path::new(path).exists())
-            .context("Font not found in any font directory. Make sure the font is on your system or specify the font directory with the -p option")?;
+            .context(
+                r#"Error: Font not found in any font directory.
+                Make sure the font is on your system or specify the font directory with the -p option"#
+            )?;
 
         fonts::from_files(font_dir, DEFAULT_FONT_NAME, None).context(format!(
             "Failed to load font from default directory: {}",
@@ -80,9 +98,9 @@ fn setup_document(font: fonts::FontFamily<FontData>) -> Document {
 
 fn apply_template(doc: &mut Document, person: &Person, template: Option<&String>) {
     if let Some(tmp) = template {
-        match tmp.as_str() {
-            "clean" => gen_clean_temp(doc, person),
-            _ => gen_default_temp(doc, person),
+        match Template::from_str(tmp.as_str()) {
+            Template::Clean => gen_clean_temp(doc, person),
+            Template::Default => gen_default_temp(doc, person),
         }
     }
 }

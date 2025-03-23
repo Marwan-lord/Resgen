@@ -5,7 +5,7 @@ use genpdf::{
 
 use crate::user::Person;
 
-struct Line;
+pub struct Line;
 
 impl Element for Line {
     fn render(
