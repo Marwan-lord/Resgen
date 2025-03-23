@@ -45,26 +45,6 @@ impl Template {
 
 const DEFAULT_FONT_NAME: &str = "LiberationSans";
 
-fn main() -> Result<()> {
-    let parsed = cli::Cli::run();
-
-    if let Some(fp) = parsed.get_one::<String>("filename") {
-        let data = fs::read_to_string(fp)?;
-        let person: Person = serde_json::from_str(&data)?;
-        let font = load_font(parsed.get_one::<String>("font-path"))?;
-        let mut doc = setup_document(font);
-
-        apply_template(&mut doc, &person, parsed.get_one::<String>("template"));
-
-        if let Some(output) = parsed.get_one::<String>("output") {
-            doc.render_to_file(output)
-                .expect("Error rendering file to output");
-        }
-    }
-
-    Ok(())
-}
-
 fn load_font(font_path: Option<&String>) -> Result<FontFamily<FontData>> {
     if let Some(fp) = font_path {
         fonts::from_files(fp, DEFAULT_FONT_NAME, None)
@@ -103,4 +83,24 @@ fn apply_template(doc: &mut Document, person: &Person, template: Option<&String>
             Template::Default => gen_default_temp(doc, person),
         }
     }
+}
+
+fn main() -> Result<()> {
+    let parsed = cli::Cli::run();
+
+    if let Some(fp) = parsed.get_one::<String>("filename") {
+        let data = fs::read_to_string(fp)?;
+        let person: Person = serde_json::from_str(&data)?;
+        let font = load_font(parsed.get_one::<String>("font-path"))?;
+        let mut doc = setup_document(font);
+
+        apply_template(&mut doc, &person, parsed.get_one::<String>("template"));
+
+        if let Some(output) = parsed.get_one::<String>("output") {
+            doc.render_to_file(output)
+                .expect("Error rendering file to output");
+        }
+    }
+
+    Ok(())
 }
