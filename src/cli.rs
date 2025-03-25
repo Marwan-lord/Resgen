@@ -22,7 +22,7 @@ impl Cli {
                     .short('p')
                     .required(false)
                     .long("path")
-                .help("Path to the font you want to you if not set it will look in your OS default font path you can set it manually if you have problems")
+                    .help("Path to the font you want"),
             )
             .arg(
                 Arg::new("template")

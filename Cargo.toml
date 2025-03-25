@@ -2,6 +2,9 @@
 name = "resgen"
 version = "0.1.0"
 edition = "2021"
+authors = ["Marwan Mohamed <merolokamino@gmail.com>"]
+description = "CLI tool for generating PDF resumes from JSON"
+license = "BSD 2-Clause"
 
 [dependencies]
 anyhow = "1.0.95"

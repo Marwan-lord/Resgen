@@ -1,32 +1,75 @@
-pub mod cli;
-pub mod temps;
-pub mod user;
-
-use crate::user::Person;
-use std::fs;
-use std::path::Path;
-
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use genpdf::{
     fonts::{self, FontData, FontFamily},
     Document, SimplePageDecorator,
 };
+use serde_json;
+use std::env;
+use std::fs;
+use std::path::{Path, PathBuf};
+
+mod cli;
+mod temps;
+mod user;
 
 use temps::{clean::gen_clean_temp, default::gen_default_temp};
+use user::Person;
 
-const FONT_DIRS: &[&str] = &[
-    "/usr/share/fonts/liberation",
-    "/usr/share/fonts/truetype/liberation",
-    "/usr/share/fonts/",
-    "./fonts/",
-    "~/.fonts",
-    "~/.local/share/fonts",
-    "/run/current-system/sw/share/X11/fonts",
-    "%LOCALAPPDATA%\\Microsoft\\Windows\\Fonts",
-    "C:\\Windows\\Fonts",
-    "C:\\Windows\\Fonts\\Liberation",
-    "/Library/Fonts/",
-];
+struct FontDiscovery {
+    system_font_paths: Vec<PathBuf>,
+    custom_paths: Vec<PathBuf>,
+}
+
+impl FontDiscovery {
+    fn new() -> Self {
+        let mut paths = vec![
+            "/usr/share/fonts".into(),
+            "/usr/local/share/fonts".into(),
+            "/run/current-system/sw/share/X11/fonts".into(),
+            PathBuf::from(env::var("HOME").unwrap_or_default()).join(".fonts"),
+            PathBuf::from(env::var("WINDIR").unwrap_or_default()).join("Fonts"),
+            "/Library/Fonts".into(),
+            "/System/Library/Fonts".into(),
+        ];
+
+        if let Ok(xdg_data_home) = env::var("XDG_DATA_HOME") {
+            paths.push(PathBuf::from(xdg_data_home).join("fonts"));
+        }
+
+        Self {
+            system_font_paths: paths,
+            custom_paths: Vec::new(),
+        }
+    }
+
+    fn add_custom_path(&mut self, path: PathBuf) {
+        self.custom_paths.push(path);
+    }
+
+    fn find_liberation_sans(&self) -> Result<PathBuf> {
+        let font_names = [
+            "LiberationSans-Regular.ttf",
+            "LiberationSans.ttf",
+            "Liberation Sans Regular.ttf",
+        ];
+
+        let search_paths = self
+            .custom_paths
+            .iter()
+            .chain(self.system_font_paths.iter());
+
+        for base_path in search_paths {
+            for font_name in &font_names {
+                let potential_path = base_path.join(font_name);
+                if potential_path.exists() {
+                    return Ok(potential_path);
+                }
+            }
+        }
+
+        bail!("Could not find Liberation Sans font")
+    }
+}
 
 #[derive(Debug)]
 enum Template {
@@ -43,64 +86,110 @@ impl Template {
     }
 }
 
-const DEFAULT_FONT_NAME: &str = "LiberationSans";
-
-fn load_font(font_path: Option<&String>) -> Result<FontFamily<FontData>> {
-    if let Some(fp) = font_path {
-        fonts::from_files(fp, DEFAULT_FONT_NAME, None)
-            .context(format!("Failed to load font from specified path: {:?}", fp))
-    } else {
-        let font_dir = FONT_DIRS.iter()
-            .find(|&&path| Path::new(path).exists())
-            .context(
-                r#"Error: Font not found in any font directory.
-                Make sure the font is on your system or specify the font directory with the -p option"#
-            )?;
-
-        fonts::from_files(font_dir, DEFAULT_FONT_NAME, None).context(format!(
-            "Failed to load font from default directory: {}",
-            font_dir
-        ))
-    }
+struct CVGenerator {
+    font_discovery: FontDiscovery,
 }
 
-fn setup_document(font: fonts::FontFamily<FontData>) -> Document {
-    let mut doc = Document::new(font);
-    doc.set_font_size(12);
-    doc.set_title("CV");
-
-    let mut decorator = SimplePageDecorator::new();
-    decorator.set_margins(10);
-    doc.set_page_decorator(decorator);
-
-    doc
-}
-
-fn apply_template(doc: &mut Document, person: &Person, template: Option<&String>) {
-    if let Some(tmp) = template {
-        match Template::from_str(tmp.as_str()) {
-            Template::Clean => gen_clean_temp(doc, person),
-            Template::Default => gen_default_temp(doc, person),
+impl CVGenerator {
+    fn new() -> Self {
+        Self {
+            font_discovery: FontDiscovery::new(),
         }
+    }
+
+    fn add_font_path(&mut self, path: PathBuf) {
+        self.font_discovery.add_custom_path(path);
+    }
+
+    fn load_font(&self, explicit_path: Option<&String>) -> Result<FontFamily<FontData>> {
+        // If an explicit path is provided, try that first
+        if let Some(path) = explicit_path {
+            let path = PathBuf::from(path);
+            if path.exists() {
+                return fonts::from_files(&path, "LiberationSans", None)
+                    .context("Failed to load font from explicit path");
+            }
+        }
+
+        let font_path = self.font_discovery.find_liberation_sans()?;
+
+        fonts::from_files(font_path.parent().unwrap(), "LiberationSans", None)
+            .context("Failed to load Liberation Sans font")
+    }
+
+    fn setup_document(&self, font: FontFamily<FontData>) -> Document {
+        let mut doc = Document::new(font);
+        doc.set_font_size(11);
+        doc.set_title("Professional CV");
+
+        let mut decorator = SimplePageDecorator::new();
+        decorator.set_margins(12);
+        doc.set_page_decorator(decorator);
+
+        doc
+    }
+
+    fn apply_template(&self, doc: &mut Document, person: &Person, template: Option<&String>) {
+        match template.map(|t| Template::from_str(t)) {
+            Some(Template::Clean) => gen_clean_temp(doc, person),
+            _ => gen_default_temp(doc, person),
+        }
+    }
+
+    fn generate_cv(
+        &mut self,
+        input_file: &str,
+        output_file: Option<&String>,
+        font_path: Option<&String>,
+        template: Option<&String>,
+    ) -> Result<()> {
+        let data = fs::read_to_string(input_file).context("Failed to read input JSON file")?;
+
+        let person: Person =
+            serde_json::from_str(&data).context("Invalid JSON format in input file")?;
+
+        let font = self.load_font(font_path)?;
+
+        let mut doc = self.setup_document(font);
+
+        self.apply_template(&mut doc, &person, template);
+
+        if let Some(output) = output_file {
+            doc.render_to_file(output)
+                .context("Failed to render CV to output file")?;
+        } else {
+            let default_output = format!(
+                "{}_cv.pdf",
+                Path::new(input_file)
+                    .file_stem()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("output")
+            );
+            doc.render_to_file(&default_output)
+                .context("Failed to render CV to default output file")?;
+        }
+
+        Ok(())
     }
 }
 
 fn main() -> Result<()> {
     let parsed = cli::Cli::run();
 
-    if let Some(fp) = parsed.get_one::<String>("filename") {
-        let data = fs::read_to_string(fp)?;
-        let person: Person = serde_json::from_str(&data)?;
-        let font = load_font(parsed.get_one::<String>("font-path"))?;
-        let mut doc = setup_document(font);
+    let input_file = parsed
+        .get_one::<String>("filename")
+        .context("No input file specified")?;
 
-        apply_template(&mut doc, &person, parsed.get_one::<String>("template"));
+    let mut generator = CVGenerator::new();
 
-        if let Some(output) = parsed.get_one::<String>("output") {
-            doc.render_to_file(output)
-                .expect("Error rendering file to output");
-        }
+    if let Some(custom_path) = parsed.get_one::<String>("font-path") {
+        generator.add_font_path(PathBuf::from(custom_path));
     }
 
-    Ok(())
+    generator.generate_cv(
+        input_file,
+        parsed.get_one::<String>("output"),
+        parsed.get_one::<String>("font-path"),
+        parsed.get_one::<String>("template"),
+    )
 }
