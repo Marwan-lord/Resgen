@@ -17,7 +17,7 @@ Define your resume once in JSON,then generate consistent PDF versions tailored t
 
 ### Producing the Output resume
 ``` bash
- resgen -f resume.json -o mycv.pdf -t clean  
+ resgen -f resume.json -o mycv.pdf -t clean -p /path/to/font
 ```
 
 ``` bash
@@ -44,3 +44,15 @@ Requires [Rust toolchain](https://www.rust-lang.org/tools/install) installed.
 ```bash
 cargo install --git https://github.com/Marwan-lord/Resgen
 ```
+
+### On NixOS
+```bash 
+git clone https://github.com/Marwan-lord/Resgen.git
+cd Resgen
+nix-build package.nix
+nix-env -f package.nix -i
+resgen --help
+```
+
+
+This installs the program on your system. 
