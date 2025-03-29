@@ -101,7 +101,6 @@ impl CVGenerator {
     }
 
     fn load_font(&self, explicit_path: Option<&String>) -> Result<FontFamily<FontData>> {
-        // If an explicit path is provided, try that first
         if let Some(path) = explicit_path {
             let path = PathBuf::from(path);
             if path.exists() {
@@ -174,10 +173,11 @@ impl CVGenerator {
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+    use std::fs::File;
     use std::io::Write;
+    use std::path::Path;
     use tempfile::TempDir;
-
-    use fs::File;
 
     use super::*;
 
@@ -186,6 +186,16 @@ mod tests {
         let mut file = File::create(&font_path)?;
         file.write_all(b"This is a dummy font file for testing")?;
         Ok(font_path)
+    }
+
+    fn create_test_json(dir: &Path) -> Result<PathBuf> {
+        let json_path = dir.join("test_person.json");
+        // NOTE NOTE NOTE LGTM
+        let json_content = include_str!("../it.json");
+
+        let mut file = File::create(&json_path)?;
+        file.write_all(json_content.as_bytes())?;
+        Ok(json_path)
     }
 
     #[test]
@@ -217,6 +227,12 @@ mod tests {
 
         assert!(discovery.custom_paths.contains(&custom_path));
         assert_eq!(discovery.custom_paths.len(), 1);
+
+        // Test adding multiple paths
+        let another_path = PathBuf::from("/another/custom/path");
+        discovery.add_custom_path(another_path.clone());
+        assert!(discovery.custom_paths.contains(&another_path));
+        assert_eq!(discovery.custom_paths.len(), 2);
     }
 
     #[test]
@@ -233,10 +249,12 @@ mod tests {
         Ok(())
     }
 
+    // NOTE NOTE NOTE NOTE LGTM
     #[test]
     fn test_find_liberation_sans_with_alternative_names() -> Result<()> {
         let temp_dir = TempDir::new()?;
 
+        // Test with different font name variants
         let font_path = create_test_font(temp_dir.path(), "LiberationSans.ttf")?;
 
         let mut discovery = FontDiscovery::new();
@@ -245,14 +263,47 @@ mod tests {
         let found_path = discovery.find_liberation_sans()?;
 
         assert_eq!(found_path, font_path);
+
+        let temp_dir2 = TempDir::new()?;
+        let font_path2 = create_test_font(temp_dir2.path(), "Liberation Sans Regular.ttf")?;
+
+        let mut discovery2 = FontDiscovery::new();
+        discovery2.add_custom_path(temp_dir2.path().to_path_buf());
+
+        let found_path2 = discovery2.find_liberation_sans()?;
+        assert_eq!(found_path2, font_path2);
+
         Ok(())
     }
 
+    // NOTE NOTE NOTE NOTE NOTE LGTM
+    #[test]
+    fn test_find_liberation_sans_system_path_priority() -> Result<()> {
+        let system_dir = TempDir::new()?;
+        let custom_dir = TempDir::new()?;
+
+        let system_font = create_test_font(system_dir.path(), "LiberationSans-Regular.ttf")?;
+        let _custom_font = create_test_font(custom_dir.path(), "LiberationSans-Regular.ttf")?;
+
+        let mut discovery = FontDiscovery::new();
+        discovery.system_font_paths.clear();
+        discovery
+            .system_font_paths
+            .push(system_dir.path().to_path_buf());
+        discovery.add_custom_path(custom_dir.path().to_path_buf());
+
+        let found_path = discovery.find_liberation_sans()?;
+
+        // Custom paths should take priority over system paths
+        assert_ne!(found_path, system_font);
+        Ok(())
+    }
+
+    // NOTE NOTE NOTE NOTE LGTM
     #[test]
     fn test_find_liberation_sans_not_found() {
         let mut discovery = FontDiscovery::new();
 
-        // Create a temp directory path that doesn't actually exist
         let temp_dir = PathBuf::from("/tmp/nonexistent_dir_for_testing");
         discovery.system_font_paths.clear();
         discovery.add_custom_path(temp_dir);
@@ -269,8 +320,18 @@ mod tests {
     fn test_cv_generator_creation() {
         let generator = CVGenerator::new();
 
-        // Verify it has a font discovery instance
         assert!(!generator.font_discovery.system_font_paths.is_empty());
+    }
+
+    #[test]
+    fn test_add_font_path_to_generator() {
+        let mut generator = CVGenerator::new();
+        let custom_path = PathBuf::from("/test/font/path");
+
+        generator.add_font_path(custom_path.clone());
+
+        assert!(generator.font_discovery.custom_paths.contains(&custom_path));
+        assert_eq!(generator.font_discovery.custom_paths.len(), 1);
     }
 
     #[test]
@@ -297,6 +358,7 @@ mod tests {
         Ok(())
     }
 
+    // NOTE NOTE NOTE LGTM
     #[test]
     fn test_template_from_str() {
         match Template::from_str("clean") {
@@ -307,6 +369,93 @@ mod tests {
         match Template::from_str("unknown") {
             Template::Default => {}
             _ => panic!("Expected Template::Default for unknown template"),
+        }
+
+        match Template::from_str("default") {
+            Template::Default => {}
+            _ => panic!("Expected Template::Default for 'default'"),
+        }
+
+        match Template::from_str("") {
+            Template::Default => {}
+            _ => panic!("Expected Template::Default for empty string"),
+        }
+    }
+
+    // NOTE NOTE NOTE Kinda
+    #[test]
+    fn test_generate_cv_explicit_output() -> Result<()> {
+        let temp_dir = TempDir::new()?;
+        let json_path = create_test_json(temp_dir.path())?;
+        let output_path = temp_dir
+            .path()
+            .join("explicit_output.pdf")
+            .to_string_lossy()
+            .to_string();
+
+        let mut generator = CVGenerator::new();
+
+        let result =
+            generator.generate_cv(json_path.to_str().unwrap(), Some(&output_path), None, None);
+
+        assert!(result.is_ok());
+        Ok(())
+    }
+
+    // NOTE NOTE NOTE Kinda
+    #[test]
+    fn test_generate_cv_with_clean_template() -> Result<()> {
+        let temp_dir = TempDir::new()?;
+        let json_path = create_test_json(temp_dir.path())?;
+        let template = "clean".to_string();
+
+        let mut generator = CVGenerator::new();
+
+        let result =
+            generator.generate_cv(json_path.to_str().unwrap(), None, None, Some(&template));
+
+        assert!(result.is_ok());
+
+        Ok(())
+    }
+
+    // NOTE NOTE NOTE LGTM
+    #[test]
+    fn test_generate_cv_invalid_json() {
+        let temp_dir = TempDir::new().unwrap();
+        let invalid_json_path = temp_dir.path().join("invalid.json");
+        fs::write(&invalid_json_path, "{jakjdkfj json}").unwrap();
+
+        let mut generator = CVGenerator::new();
+
+        let result = generator.generate_cv(invalid_json_path.to_str().unwrap(), None, None, None);
+
+        assert!(result.is_err());
+        if let Err(e) = result {
+            assert!(
+                e.to_string().contains("Invalid JSON format"),
+                "Unexpected error message: {}",
+                e
+            );
+        }
+    }
+
+    // NOTE NOTE NOTE LGTM
+    #[test]
+    fn test_generate_cv_nonexistent_file() {
+        let nonexistent_path = "/tmp/nonexistent_file_for_testing.json";
+
+        let mut generator = CVGenerator::new();
+
+        let result = generator.generate_cv(nonexistent_path, None, None, None);
+
+        assert!(result.is_err());
+        if let Err(e) = result {
+            assert!(
+                e.to_string().contains("Failed to read input JSON file"),
+                "Unexpected error message: {}",
+                e
+            );
         }
     }
 }
