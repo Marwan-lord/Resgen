@@ -17,6 +17,7 @@ fn main() -> Result<()> {
 
     let mut generator = CVGenerator::new();
 
+    println!("Hello");
     if let Some(custom_path) = parsed.get_one::<String>("font-path") {
         generator.add_font_path(PathBuf::from(custom_path));
     }
