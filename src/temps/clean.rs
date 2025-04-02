@@ -6,17 +6,24 @@ use genpdf::{
 use crate::temps::default::add_paragraph;
 use crate::user::Person;
 
+use super::default::Line;
+
 fn ct_header(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::default().styled_string(
         p.name.to_string(),
         style::Style::new().bold().with_font_size(15),
     ));
+
+    doc.push(Break::new(0.5));
+    doc.push(Line);
     doc.push(Paragraph::new(p.contact.to_string()));
     doc.push(Break::new(1));
 }
 
 fn ct_summary(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::new("Summary").styled(style::Style::new().bold().with_font_size(14)));
+    doc.push(Break::new(0.5));
+    doc.push(Line);
     doc.push(Break::new(0.5));
     doc.push(Paragraph::new(p.summary));
     doc.push(Break::new(1));
@@ -27,6 +34,8 @@ fn ct_we(doc: &mut Document, p: &Person) {
         doc.push(
             Paragraph::new("Work History").styled(style::Style::new().bold().with_font_size(14)),
         );
+        doc.push(Break::new(0.5));
+        doc.push(Line);
         doc.push(Break::new(0.5));
         for e in exp {
             let mut achievement_list = elements::UnorderedList::with_bullet("•");
@@ -56,6 +65,8 @@ fn ct_projs(doc: &mut Document, p: &Person) {
     if let Some(projs) = &p.projects {
         doc.push(Paragraph::new("Projects").styled(style::Style::new().bold().with_font_size(14)));
         doc.push(Break::new(0.5));
+        doc.push(Line);
+        doc.push(Break::new(0.5));
 
         for proj in projs {
             let mut used_tech = String::new();
@@ -80,6 +91,8 @@ fn ct_projs(doc: &mut Document, p: &Person) {
 fn ct_edu(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::new("Education").styled(style::Style::new().bold().with_font_size(14)));
     doc.push(Break::new(0.5));
+    doc.push(Line);
+    doc.push(Break::new(0.5));
     for e in &p.education {
         let courses = &e.courses.join(", ");
         doc.push(
@@ -99,6 +112,7 @@ fn ct_edu(doc: &mut Document, p: &Person) {
 fn ct_skills(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::new("Skills").styled(style::Style::new().bold().with_font_size(14)));
     doc.push(Break::new(0.5));
+    doc.push(Line);
 
     add_paragraph(doc, "Languages", &p.skills.languages);
     add_paragraph(doc, "Technicals", &p.skills.technical);

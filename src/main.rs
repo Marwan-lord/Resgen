@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use anyhow::{Context, Result};
 use setup::CVGenerator;
 
@@ -16,11 +14,6 @@ fn main() -> Result<()> {
         .context("No input file specified")?;
 
     let mut generator = CVGenerator::new();
-
-    println!("Hello");
-    if let Some(custom_path) = parsed.get_one::<String>("font-path") {
-        generator.add_font_path(PathBuf::from(custom_path));
-    }
 
     generator.generate_cv(
         input_file,
