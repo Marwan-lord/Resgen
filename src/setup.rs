@@ -147,6 +147,9 @@ impl CVGenerator {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs::File;
+    use std::io::Write;
+    use tempfile::TempDir;
 
     #[test]
     fn test_template_name_variations() {
@@ -158,5 +161,80 @@ mod tests {
         ));
         assert!(matches!(Template::from_str(""), Template::Default));
         assert!(matches!(Template::from_str("fancy"), Template::Default));
+    }
+
+    #[test]
+    fn test_generate_cv_with_missing_input_file() {
+        let mut cv_generator = CVGenerator::new();
+        let temp_dir = TempDir::new().unwrap();
+        let missing_input_file = temp_dir.path().join("missing_person.json");
+        let output_file = temp_dir.path().join("output.pdf");
+
+        let result = cv_generator.generate_cv(
+            missing_input_file.to_str().unwrap(),
+            Some(&output_file.to_str().unwrap().to_string()),
+            None,
+            None,
+        );
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_generate_cv_with_invalid_json() {
+        let mut cv_generator = CVGenerator::new();
+        let temp_dir = TempDir::new().unwrap();
+        let input_file = temp_dir.path().join("invalid_person.json");
+        let output_file = temp_dir.path().join("output.pdf");
+
+        // Create a mock input file with invalid JSON
+        let invalid_json = r#"{ "name": "John Doe", "email": "john.doe@example.com", "#;
+        let mut file = File::create(&input_file).unwrap();
+        file.write_all(invalid_json.as_bytes()).unwrap();
+
+        let result = cv_generator.generate_cv(
+            input_file.to_str().unwrap(),
+            Some(&output_file.to_str().unwrap().to_string()),
+            None,
+            None,
+        );
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_font_discovery_with_empty_paths() {
+        let font_discovery = FontDiscovery {
+            system_font_paths: Vec::new(),
+        };
+
+        let result = font_discovery.find_liberation_sans();
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_load_font_with_directory_path() {
+        let cv_generator = CVGenerator::new();
+        let temp_dir = TempDir::new().unwrap();
+        let directory_path = temp_dir.path().to_str().unwrap().to_string();
+
+        let result = cv_generator.load_font(Some(&directory_path));
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_generate_cv_with_empty_input_file() {
+        let mut cv_generator = CVGenerator::new();
+        let temp_dir = TempDir::new().unwrap();
+        let input_file = temp_dir.path().join("empty_person.json");
+        let output_file = temp_dir.path().join("output.pdf");
+
+        File::create(&input_file).unwrap();
+
+        let result = cv_generator.generate_cv(
+            input_file.to_str().unwrap(),
+            Some(&output_file.to_str().unwrap().to_string()),
+            None,
+            None,
+        );
+        assert!(result.is_err());
     }
 }
