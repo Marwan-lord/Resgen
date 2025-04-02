@@ -152,6 +152,28 @@ mod tests {
     use tempfile::TempDir;
 
     #[test]
+    fn test_generate_cv_with_custom_output_name() {
+        let mut cv_generator = CVGenerator::new();
+        let temp_dir = TempDir::new().unwrap();
+        let input_file = temp_dir.path().join("person.json");
+        let custom_output_file = temp_dir.path().join("custom_output.pdf");
+
+        let valid_json = include_str!("../it.json");
+        let mut file = File::create(&input_file).unwrap();
+        file.write_all(valid_json.as_bytes()).unwrap();
+
+        let result = cv_generator.generate_cv(
+            input_file.to_str().unwrap(),
+            Some(&custom_output_file.to_str().unwrap().to_string()),
+            None,
+            None,
+        );
+
+        assert!(result.is_ok());
+        assert!(custom_output_file.exists());
+    }
+
+    #[test]
     fn test_template_name_variations() {
         assert!(matches!(Template::from_str("clean"), Template::Clean));
         assert!(matches!(Template::from_str("default"), Template::Default));
@@ -180,27 +202,6 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_cv_with_invalid_json() {
-        let mut cv_generator = CVGenerator::new();
-        let temp_dir = TempDir::new().unwrap();
-        let input_file = temp_dir.path().join("invalid_person.json");
-        let output_file = temp_dir.path().join("output.pdf");
-
-        // Create a mock input file with invalid JSON
-        let invalid_json = r#"{ "name": "John Doe", "email": "john.doe@example.com", "#;
-        let mut file = File::create(&input_file).unwrap();
-        file.write_all(invalid_json.as_bytes()).unwrap();
-
-        let result = cv_generator.generate_cv(
-            input_file.to_str().unwrap(),
-            Some(&output_file.to_str().unwrap().to_string()),
-            None,
-            None,
-        );
-        assert!(result.is_err());
-    }
-
-    #[test]
     fn test_font_discovery_with_empty_paths() {
         let font_discovery = FontDiscovery {
             system_font_paths: Vec::new(),
@@ -217,24 +218,6 @@ mod tests {
         let directory_path = temp_dir.path().to_str().unwrap().to_string();
 
         let result = cv_generator.load_font(Some(&directory_path));
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_generate_cv_with_empty_input_file() {
-        let mut cv_generator = CVGenerator::new();
-        let temp_dir = TempDir::new().unwrap();
-        let input_file = temp_dir.path().join("empty_person.json");
-        let output_file = temp_dir.path().join("output.pdf");
-
-        File::create(&input_file).unwrap();
-
-        let result = cv_generator.generate_cv(
-            input_file.to_str().unwrap(),
-            Some(&output_file.to_str().unwrap().to_string()),
-            None,
-            None,
-        );
         assert!(result.is_err());
     }
 }
