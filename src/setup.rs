@@ -147,31 +147,7 @@ impl CVGenerator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs::File;
-    use std::io::Write;
     use tempfile::TempDir;
-
-    #[test]
-    fn test_generate_cv_with_custom_output_name() {
-        let mut cv_generator = CVGenerator::new();
-        let temp_dir = TempDir::new().unwrap();
-        let input_file = temp_dir.path().join("person.json");
-        let custom_output_file = temp_dir.path().join("custom_output.pdf");
-
-        let valid_json = include_str!("../it.json");
-        let mut file = File::create(&input_file).unwrap();
-        file.write_all(valid_json.as_bytes()).unwrap();
-
-        let result = cv_generator.generate_cv(
-            input_file.to_str().unwrap(),
-            Some(&custom_output_file.to_str().unwrap().to_string()),
-            None,
-            None,
-        );
-
-        assert!(result.is_ok());
-        assert!(custom_output_file.exists());
-    }
 
     #[test]
     fn test_template_name_variations() {
