@@ -24,8 +24,8 @@ Define your resume once in JSON,then generate consistent PDF versions tailored t
  resgen -f cv.json
 ```
 ## Results
-[default](https://github.com/Marwan-lord/Resgen/blob/main/assets/default_cv.png)
-[clean](https://github.com/Marwan-lord/Resgen/blob/main/assets/clean_cv.png)
+![default](https://github.com/Marwan-lord/Resgen/blob/main/assets/default_cv.png)
+![clean](https://github.com/Marwan-lord/Resgen/blob/main/assets/clean_cv.png)
 
 ## Resulted PDFs
 The default template: [here](https://github.com/Marwan-lord/Resgen/blob/main/default_cv.pdf)  
