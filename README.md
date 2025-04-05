@@ -23,6 +23,9 @@ Define your resume once in JSON,then generate consistent PDF versions tailored t
 ``` bash
  resgen -f cv.json
 ```
+## Results
+[default](https://github.com/Marwan-lord/Resgen/blob/main/assets/default_cv.png)
+[clean](https://github.com/Marwan-lord/Resgen/blob/main/assets/clean_cv.png)
 
 ## Resulted PDFs
 The default template: [here](https://github.com/Marwan-lord/Resgen/blob/main/default_cv.pdf)  
@@ -54,3 +57,10 @@ nix-env -f package.nix -i
 resgen --help
 ```
 This installs the program on your system. 
+
+## Nix Shell
+
+You can also use the provided shell.nix file, just type
+```bash
+nix-shell
+```
