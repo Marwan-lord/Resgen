@@ -17,7 +17,7 @@ Define your resume once in JSON,then generate consistent PDF versions tailored t
 
 ### Producing the Output resume
 ``` bash
- resgen -f resume.json -o mycv.pdf -t clean -p /path/to/font
+ resgen -f resume.json -o mycv.pdf -t clean -p /path/to/dir # note that it's the directory not the font itself (LiberationSans)
 ```
 
 ``` bash
@@ -53,6 +53,4 @@ nix-build package.nix
 nix-env -f package.nix -i
 resgen --help
 ```
-
-
 This installs the program on your system. 
