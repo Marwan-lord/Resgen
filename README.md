@@ -64,3 +64,12 @@ You can also use the provided shell.nix file, just type
 ```bash
 nix-shell
 ```
+
+## Flakes
+Flakes are the more modern approach to nix dev environments, just run
+```
+nix develop 
+cargo build 
+```
+
+to setup the dev environment and then build the project
