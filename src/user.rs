@@ -2,16 +2,18 @@ use std::fmt::{Display, Formatter};
 
 use serde::{Deserialize, Serialize};
 
+/// The main person object containing the full parsed data file
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Person<'a> {
-    pub name: &'a str,
-    pub address: &'a str,
-    pub contact: Contact<'a>,
-    pub summary: &'a str,
-    pub work_experience: Option<Vec<Work<'a>>>,
-    pub education: Vec<Edu<'a>>,
+pub struct Person {
+    pub name: String,
+    pub title: Option<String>,
+    pub address: String,
+    pub contact: Contact,
+    pub summary: String,
+    pub work_experience: Option<Vec<Work>>,
+    pub education: Vec<Edu>,
     pub skills: Skills,
-    pub projects: Option<Vec<Project<'a>>>,
+    pub projects: Option<Vec<Project>>,
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Skills {
@@ -23,14 +25,14 @@ pub struct Skills {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Contact<'a> {
-    pub email: &'a str,
-    pub phone: &'a str,
-    pub linkedin: &'a str,
-    pub github: &'a str,
+pub struct Contact {
+    pub email: String,
+    pub phone: String,
+    pub linkedin: String,
+    pub github: String,
 }
 
-impl Display for Contact<'_> {
+impl Display for Contact {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -41,20 +43,20 @@ impl Display for Contact<'_> {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Project<'a> {
-    pub name: &'a str,
-    pub description: &'a str,
-    pub technologies: Vec<&'a str>,
-    pub url: &'a str,
+pub struct Project {
+    pub name: String,
+    pub description: String,
+    pub technologies: Vec<String>,
+    pub url: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Work<'a> {
-    pub title: &'a str,
-    pub company: &'a str,
-    pub start_date: &'a str,
-    pub end_date: &'a str,
-    pub achievements: Vec<&'a str>,
+pub struct Work {
+    pub title: String,
+    pub company: String,
+    pub start_date: String,
+    pub end_date: String,
+    pub achievements: Vec<String>,
 }
 
 //impl Display for Work {
@@ -68,16 +70,16 @@ pub struct Work<'a> {
 //}
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Edu<'a> {
-    pub degree: &'a str,
-    pub institution: &'a str,
-    pub start_date: &'a str,
-    pub end_date: &'a str,
-    pub gpa: &'a str,
-    pub courses: Vec<&'a str>,
+pub struct Edu {
+    pub degree: String,
+    pub institution: String,
+    pub start_date: String,
+    pub end_date: String,
+    pub gpa: String,
+    pub courses: Vec<String>,
 }
 
-impl Display for Person<'_> {
+impl Display for Person {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let strings = self
             .education
@@ -89,7 +91,7 @@ impl Display for Person<'_> {
     }
 }
 
-impl Display for Edu<'_> {
+impl Display for Edu {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

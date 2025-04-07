@@ -1,27 +1,38 @@
-# Resgen - JSON to PDF Resume Generator
+# Resgen - TOML to PDF Resume Generator
 
-Resgen is a lightweight, command-line tool that converts structured JSON data into polished PDF resumes.
+Resgen is a lightweight, command-line tool that converts structured TOML data into polished PDF resumes.
 Built with Rust, it prioritizes speed, simplicity,and customization 
 while avoiding bloated dependencies.
-Define your resume once in JSON,then generate consistent PDF versions tailored to different opportunities.
+Define your resume once ,then generate consistent PDF versions tailored to different opportunities.
 
 
 ## Prerequisites
 1. Having LiberationSans font installed
 
 ## Getting Started
-1. Make a file ending with .json then copy the file temp.json found in this repo to the file
+1. Make a file ending with .toml then copy the file temp.tomlfound in this repo to the file
 2. fill the the required fields and remove the optional fields (eg. Work Expreince, Projects, all skills fields are optional but you must have one at least)
 3. save and exit then execute
+
+### Testing on your machine 
+```bash
+git clone https://github.com/Marwan-lord/Resgen.git
+cd Resgen
+cargo build --release
+./target/release/resgen -f it.toml # the output is going to be cv.pdf
+```
+
+### Simple Troubleshooting
+If it says that the font isn't found try installing the font and putting it in ~/.fonts/ then rerun the program
 
 
 ### Producing the Output resume
 ``` bash
- resgen -f resume.json -o mycv.pdf -t clean -p /path/to/dir # note that it's the directory not the font itself (LiberationSans)
+ resgen -f resume.toml -o mycv.pdf -t clean -p /path/to/dir # note that it's the directory not the font itself (LiberationSans)
 ```
 
 ``` bash
- resgen -f cv.json
+ resgen -f cv.toml
 ```
 ## Results
 ![default](https://github.com/Marwan-lord/Resgen/blob/main/assets/default_cv.png)
@@ -33,7 +44,7 @@ The clean option: [here](https://github.com/Marwan-lord/Resgen/blob/main/clean_c
 
 ## Features
 
-- **Clean JSON Structure**: Define your resume content in a human-readable JSON format
+- **Clean TOML Structure**: Define your resume content in a human-readable TOML format
 - **CLI Simplicity**: Generate PDFs with a single terminal command
 - **Zero Runtime Dependencies**: Compiled binary works out-of-the-box
 - **Cross-Platform**: Runs seamlessly on macOS, and Linux.

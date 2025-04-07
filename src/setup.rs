@@ -4,7 +4,6 @@ use genpdf::{
     Document, SimplePageDecorator,
 };
 
-use serde_json;
 use std::env;
 use std::fs;
 use std::path::PathBuf;
@@ -14,7 +13,9 @@ use crate::{
     user::Person,
 };
 
+/// Contains the font discovery logic for the document setup
 struct FontDiscovery {
+    // all paths regardless of the system
     system_font_paths: Vec<PathBuf>,
 }
 
@@ -25,7 +26,6 @@ impl FontDiscovery {
             "/usr/local/share/fonts".into(),
             "/run/current-system/sw/share/X11/fonts".into(),
             PathBuf::from(env::var("HOME").unwrap_or_default()).join(".fonts"),
-            PathBuf::from(env::var("WINDIR").unwrap_or_default()).join("Fonts"),
             "/Library/Fonts".into(),
             "/System/Library/Fonts".into(),
         ];
@@ -39,6 +39,7 @@ impl FontDiscovery {
         }
     }
 
+    /// find the font liberation sans returning the found path
     fn find_liberation_sans(&self) -> Result<PathBuf> {
         let font_names = [
             "LiberationSans-Regular.ttf",
@@ -74,6 +75,7 @@ impl Template {
     }
 }
 
+/// Main struct containing the document setup logic
 pub struct CVGenerator {
     font_discovery: FontDiscovery,
 }
@@ -86,6 +88,7 @@ impl CVGenerator {
     }
 
     fn load_font(&self, explicit_path: Option<&String>) -> Result<FontFamily<FontData>> {
+        // Chose if there is an explicit path over the system paths if provided
         if let Some(path) = explicit_path {
             let path = PathBuf::from(path);
             if path.exists() {
@@ -94,6 +97,7 @@ impl CVGenerator {
             }
         }
 
+        // find the font in system paths
         let font_path = self.font_discovery.find_liberation_sans()?;
 
         fonts::from_files(font_path.parent().unwrap(), "LiberationSans", None)
@@ -126,10 +130,9 @@ impl CVGenerator {
         font_path: Option<&String>,
         template: Option<&String>,
     ) -> Result<()> {
-        let data = fs::read_to_string(input_file).context("Failed to read input JSON file")?;
+        let data = fs::read_to_string(input_file).context("Failed to read input data file")?;
 
-        let person: Person =
-            serde_json::from_str(&data).context("Invalid JSON format in input file")?;
+        let person = toml::from_str(&data).context("Invalid toml file format in input file")?;
 
         let font = self.load_font(font_path)?;
 
@@ -165,7 +168,7 @@ mod tests {
     fn test_generate_cv_with_missing_input_file() {
         let mut cv_generator = CVGenerator::new();
         let temp_dir = TempDir::new().unwrap();
-        let missing_input_file = temp_dir.path().join("missing_person.json");
+        let missing_input_file = temp_dir.path().join("missing_person.toml");
         let output_file = temp_dir.path().join("output.pdf");
 
         let result = cv_generator.generate_cv(

@@ -15,7 +15,7 @@ impl Cli {
                     .short('f')
                     .required(true)
                     .long("file")
-                    .help("choose the json file to generate your resume"),
+                    .help("choose the data file to generate your resume"),
             )
             .arg(
                 Arg::new("font-path")

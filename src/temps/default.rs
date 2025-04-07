@@ -1,48 +1,20 @@
 use genpdf::{
     elements::{self, Break, LinearLayout, Paragraph},
-    style, Alignment, Document, Element, Position, RenderResult, Size,
+    style, Alignment, Document, Element,
 };
 
 use crate::user::Person;
 
-pub struct Line;
-
-impl Element for Line {
-    fn render(
-        &mut self,
-        _: &genpdf::Context,
-        area: genpdf::render::Area<'_>,
-        style: style::Style,
-    ) -> Result<genpdf::RenderResult, genpdf::error::Error> {
-        area.draw_line(
-            vec![
-                Position {
-                    x: 0.into(),
-                    y: 0.into(),
-                },
-                Position {
-                    x: area.size().width,
-                    y: 0.into(),
-                },
-            ],
-            style.with_color(style::Color::Rgb(0, 0, 0)),
-        );
-
-        Ok(RenderResult {
-            size: Size {
-                width: area.size().width,
-                height: 1.into(),
-            },
-            has_more: false,
-        })
-    }
-}
+use super::line::Line;
 
 fn dt_header(doc: &mut Document, p: &Person) {
     let header_layout = LinearLayout::vertical()
         .element(
             Paragraph::default()
-                .styled_string(p.name, style::Style::new().bold().with_font_size(15))
+                .styled_string(
+                    p.name.clone(),
+                    style::Style::new().bold().with_font_size(15),
+                )
                 .aligned(Alignment::Center),
         )
         .element(
@@ -60,7 +32,7 @@ fn dt_header(doc: &mut Document, p: &Person) {
 fn dt_summary(doc: &mut Document, p: &Person) {
     doc.push(Paragraph::new("Summary").styled(style::Style::new().bold().with_font_size(14)));
     doc.push(Break::new(0.5));
-    doc.push(Paragraph::new(p.summary));
+    doc.push(Paragraph::new(p.summary.clone()));
     doc.push(Break::new(1));
 }
 
@@ -72,7 +44,7 @@ fn dt_edu(doc: &mut Document, p: &Person) {
         let courses = &e.courses.join(", ");
         doc.push(
             LinearLayout::vertical()
-                .element(Paragraph::new(e.degree))
+                .element(Paragraph::new(e.degree.clone()))
                 .element(
                     Paragraph::new(format!("{} - {}", e.start_date, e.end_date))
                         .aligned(Alignment::Right),
@@ -97,13 +69,13 @@ fn dt_we(doc: &mut Document, p: &Person) {
         for e in exp {
             let mut achievement_list = elements::UnorderedList::with_bullet("•");
             for ach in &e.achievements {
-                achievement_list.push(Paragraph::new(*ach));
+                achievement_list.push(Paragraph::new(ach));
             }
 
             doc.push(
                 elements::UnorderedList::with_bullet("•").element(
                     LinearLayout::vertical()
-                        .element(Paragraph::new(e.title).styled(style::Effect::Bold))
+                        .element(Paragraph::new(e.title.clone()).styled(style::Effect::Bold))
                         .element(Paragraph::new(format!("At {}", &e.company)))
                         .element(Break::new(1))
                         .element(achievement_list)
@@ -126,9 +98,9 @@ fn dt_projs(doc: &mut Document, p: &Person) {
             doc.push(
                 elements::UnorderedList::with_bullet("•").element(
                     LinearLayout::vertical()
-                        .element(Paragraph::new(proj.name).styled(style::Effect::Bold))
-                        .element(Paragraph::new(proj.url).styled(style::Effect::Italic))
-                        .element(Paragraph::new(proj.description))
+                        .element(Paragraph::new(proj.name.clone()).styled(style::Effect::Bold))
+                        .element(Paragraph::new(proj.url.clone()).styled(style::Effect::Italic))
+                        .element(Paragraph::new(proj.description.clone()))
                         .element(Paragraph::new(format!("Technologies: {}", used_tech))),
                 ),
             );

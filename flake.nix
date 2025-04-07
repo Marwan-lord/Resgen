@@ -1,13 +1,13 @@
 {
   description = "Resgen flake";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # or whatever vers
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; 
   };
 
   outputs =
     { self, nixpkgs, ... }:
     let
-      system = "x86_64-linux"; # your version
+      system = "x86_64-linux"; # 
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
@@ -15,7 +15,7 @@
         packages = with pkgs; [
           rustc
           cargo
-        ]; # whatever you need
+        ]; 
       };
     };
 }

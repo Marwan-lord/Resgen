@@ -1,0 +1,77 @@
+# Person data
+name = "Jane Doe"
+title = "Software Engineer"
+address = "123 Tech Lane, San Francisco, CA 94107"
+summary = "Experienced software engineer with 5+ years of expertise in Rust, backend development, and distributed systems. Passionate about creating scalable and maintainable solutions."
+
+# Contact information
+[contact]
+email = "jane.doe@example.com"
+phone = "(555) 123-4567"
+linkedin = "linkedin.com/in/janedoe"
+github = "github.com/janedoe"
+
+# Work Experience
+[[work_experience]]
+title = "Senior Software Engineer"
+company = "Tech Solutions Inc."
+start_date = "Jan 2021"
+end_date = "Present"
+achievements = [
+    "Led the development of a high-performance API gateway using Rust, improving request throughput by 35%",
+    "Implemented caching strategies that reduced database load by 45%",
+    "Mentored junior developers in best practices for Rust development",
+    "Refactored legacy C++ codebase to Rust, improving code maintainability and reducing bugs by 60%"
+]
+
+[[work_experience]]
+title = "Software Engineer"
+company = "DataSystems Ltd."
+start_date = "Mar 2018"
+end_date = "Dec 2020"
+achievements = [
+    "Designed and implemented a distributed logging system using Rust and Kafka",
+    "Optimized database queries resulting in 30% faster response times",
+    "Collaborated with DevOps to implement CI/CD pipelines for Rust projects",
+    "Contributed to open-source Rust libraries for database connectivity"
+]
+
+[[education]]
+degree = "Master of Science in Computer Science"
+institution = "Stanford University"
+start_date = "Aug 2016"
+end_date = "May 2018"
+gpa = "3.9/4.0"
+courses = [
+    "Advanced Algorithms",
+    "Distributed Systems",
+    "Cloud Computing",
+    "Database Management"
+]
+
+[skills]
+languages = ["Rust", "Python", "C++", "SQL", "JavaScript", "TypeScript"]
+version_control = ["Git", "GitHub", "GitLab"]
+certifications = ["AWS Certified Developer", "Rust Programming Language Certification"]
+technical = [
+    "Backend Development",
+    "API Design",
+    "Database Design",
+    "Distributed Systems",
+    "Concurrency",
+    "Performance Optimization"
+]
+tools = ["Docker", "Kubernetes", "AWS", "PostgreSQL", "Redis", "Kafka"]
+
+# Projects
+[[projects]]
+name = "Rustasyncio"
+description = "An open-source asynchronous I/O library written in Rust designed for high-performance networking applications."
+technologies = ["Rust", "Tokio", "Async/Await", "Network Programming"]
+url = "github.com/janedoe/rustasyncio"
+
+[[projects]]
+name = "RustWebAPI"
+description = "A RESTful web API framework with automatic OpenAPI documentation generation."
+technologies = ["Rust", "Actix-web", "OpenAPI", "JWT Authentication"]
+url = "github.com/janedoe/rustwebapi"
