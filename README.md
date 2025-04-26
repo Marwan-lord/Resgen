@@ -10,7 +10,7 @@ Define your resume once ,then generate consistent PDF versions tailored to diffe
 1. Having LiberationSans font installed
 
 ## Getting Started
-1. Make a file ending with .toml then copy the file temp.tomlfound in this repo to the file
+1. Make a file ending with .toml then copy the file temp.toml found in this repo to the file
 2. fill the the required fields and remove the optional fields (eg. Work Expreince, Projects, all skills fields are optional but you must have one at least)
 3. save and exit then execute
 

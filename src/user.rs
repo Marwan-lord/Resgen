@@ -36,7 +36,7 @@ impl Display for Contact {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            " {} | {} | {} | {} ",
+            " Email: {} | Phone: {} | LinkedIn: {} | Github: {} ",
             self.email, self.phone, self.linkedin, self.github
         )
     }

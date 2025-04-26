@@ -1,13 +1,8 @@
-{
-  pkgs ? import <nixpkgs> { },
-}:
-
-pkgs.mkShell {
-  buildInputs = with pkgs; [
-    rustc
-    cargo
-    pkg-config
-    openssl
-    openssl.dev
+with import <nixpkgs> {};
+stdenv.mkDerivation {
+  name = "env";
+  nativeBuildInputs = [ pkg-config  fontconfig ];
+  buildInputs = [
+    fontconfig
   ];
 }

@@ -15,27 +15,20 @@ impl Cli {
                     .short('f')
                     .required(true)
                     .long("file")
-                    .help("choose the data file to generate your resume"),
-            )
-            .arg(
-                Arg::new("font-path")
-                    .short('p')
-                    .required(false)
-                    .long("path")
-                    .help("Path to the font you want"),
+                    .help("Choose the data file to generate your resume"),
             )
             .arg(
                 Arg::new("template")
                     .short('t')
                     .default_value("default")
                     .long("temp")
-                    .help("Your resume's template. options: minimal, clean"),
+                    .help("Your resume's template. options: default, clean"),
             )
             .arg(
                 Arg::new("output")
                     .short('o')
                     .long("out")
-                    .help("choose the name of the output file")
+                    .help("Name of the output file")
                     .default_value("cv.pdf"),
             )
             .get_matches()

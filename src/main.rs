@@ -18,7 +18,6 @@ fn main() -> Result<()> {
     generator.generate_cv(
         input_file,
         parsed.get_one::<String>("output"),
-        parsed.get_one::<String>("font-path"),
         parsed.get_one::<String>("template"),
     )
 }
