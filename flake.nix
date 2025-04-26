@@ -16,9 +16,6 @@
           nativeBuildInputs = with pkgs; [ pkg-config fontconfig ];
           buildInputs = with pkgs; [ fontconfig ];
           
-          shellHook = ''
-            echo "Development environment with fontconfig is ready!"
-          '';
         };
       }
     );
