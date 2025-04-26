@@ -7,12 +7,12 @@ Define your resume once ,then generate consistent PDF versions tailored to diffe
 
 
 ## Prerequisites
-1. Having LiberationSans font installed
-2. having the fontconfig package for installation instructions
- *  Arch Linux: fontconfig
- *  Debian-based systems: libfontconfig1-dev
- *  FreeBSD: fontconfig
- *  Void Linux: fontconfig-devel
+1. LiberationSans font 
+2.  fontconfig package for installation instructions [arch](https://wiki.archlinux.org/title/Font_configuration)
+ *  Arch Linux: **fontconfig**
+ *  Debian-based systems: **libfontconfig1-dev**
+ *  FreeBSD: **fontconfig**
+ *  Void Linux: **fontconfig-devel**
 
 ## Getting Started
 1. Make a file ending with .toml then copy the file temp.toml found in this repo to the file
