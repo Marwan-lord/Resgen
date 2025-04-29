@@ -1,6 +1,6 @@
 [package]
 name = "resgen"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["Marwan Mohamed <merolokamino@gmail.com>"]
 description = "CLI tool for generating PDF resumes from JSON"
