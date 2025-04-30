@@ -1,4 +1,4 @@
-use crate::{temps::TemplateRegistry, user::Person};
+use crate::temps::TemplateRegistry;
 use anyhow::{Context, Result};
 use fontconfig::Fontconfig;
 use genpdf::{

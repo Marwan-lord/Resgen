@@ -27,10 +27,6 @@ cargo build --release
 ./target/release/resgen -f it.toml # the output is going to be cv.pdf
 ```
 
-### Simple Troubleshooting
-If it says that the font isn't found try installing the font and putting it in ~/.fonts/ then rerun the program
-
-
 ### Producing the Output resume
 ``` bash
  resgen -f resume.toml -o mycv.pdf -t clean -p /path/to/dir # note that it's the directory not the font itself (LiberationSans)
@@ -52,7 +48,6 @@ The clean option: [here](https://github.com/Marwan-lord/Resgen/blob/main/clean_c
 - **Clean TOML Structure**: Define your resume content in a human-readable TOML format
 - **CLI Simplicity**: Generate PDFs with a single terminal command
 - **Zero Runtime Dependencies**: Compiled binary works out-of-the-box
-- **Cross-Platform**: Runs seamlessly on macOS, and Linux.
 - **Privacy-First**: Your data stays local as no cloud dependencies or tracking.
 
 ## Installation
