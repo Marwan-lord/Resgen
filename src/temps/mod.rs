@@ -19,7 +19,6 @@ impl TemplateRegistry {
             templates: HashMap::new(),
         };
 
-        // Register available templates
         registry.register(Box::new(default::DefaultTemplate::new()));
         registry.register(Box::new(clean::CleanTemplate::new()));
 
@@ -36,7 +35,6 @@ impl TemplateRegistry {
 
     pub fn generate(&self, template_name: &str, doc: &mut Document, person: &Person) {
         let template = self.get(template_name).unwrap_or_else(|| {
-            // Default to the "default" template if the requested one isn't found
             self.templates
                 .get("default")
                 .expect("Default template should always be available")

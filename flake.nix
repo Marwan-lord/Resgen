@@ -1,22 +1,68 @@
 {
-  description = "Development environment with fontconfig";
+  description = "A devShell example";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    rust-overlay.url = "github:oxalica/rust-overlay";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      rust-overlay,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        overlays = [ (import rust-overlay) ];
+        pkgs = import nixpkgs {
+          inherit system overlays;
+        };
       in
       {
-        devShells.default = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [ pkg-config fontconfig ];
-          buildInputs = with pkgs; [ fontconfig ];
+
+        defaultPackage = pkgs.rustPlatform.buildRustPackage {
+          pname = "resgen";
+          version = "2.1.3";
+
+          buildInputs = with pkgs; [
+            fontconfig
+            pkg-config
+          ];
+
+          nativeBuildInputs = with pkgs; [
+            pkg-config
+          ];
+          
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+          };
+
+        
+          src = pkgs.lib.cleanSource ./.;
           
         };
+        devShells.default =
+          with pkgs;
+          mkShell {
+            buildInputs = [
+              openssl
+              pkg-config
+              fontconfig
+              eza
+              fd
+              rust-bin.beta.latest.default
+            ];
+
+            shellHook = ''
+              alias ls=eza
+              alias find=fd
+            '';
+          };
       }
     );
 }
