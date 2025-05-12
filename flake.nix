@@ -30,12 +30,16 @@
           version = "2.1";
 
           buildInputs = with pkgs; [
+            cargo
+            rustc
             fontconfig
             pkg-config
           ];
 
           nativeBuildInputs = with pkgs; [
             pkg-config
+            rustc
+            cargo
           ];
           
           cargoLock = {
@@ -51,6 +55,8 @@
           mkShell {
             buildInputs = [
               openssl
+              cargo
+              rustc
               pkg-config
               fontconfig
               eza
