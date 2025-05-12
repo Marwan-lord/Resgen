@@ -1,5 +1,5 @@
 {
-  description = "A devShell example";
+  description = "Resgen flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -27,7 +27,7 @@
 
         defaultPackage = pkgs.rustPlatform.buildRustPackage {
           pname = "resgen";
-          version = "2.1.3";
+          version = "2.1";
 
           buildInputs = with pkgs; [
             fontconfig
