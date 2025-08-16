@@ -13,6 +13,7 @@ fn main() -> Result<()> {
         .get_one::<String>("filename")
         .context("No input file specified")?;
 
+    // Simple comment 
     let mut generator = CVGenerator::new();
     generator.generate_cv(
         input_file,
